@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملف: S. El Islam</title>
+    <title>Seif El Islam Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +32,39 @@
             font-weight: 800;
             text-transform: uppercase;
         }
+        
+        /* Preloader Style */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out 0.5s, visibility 0.5s ease-out 0.5s; /* Added delay */
+        }
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-text {
+            font-family: var(--font-mono);
+            font-size: 1.25rem; /* Adjusted for better mobile view */
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+            animation: loader-glitch 2s infinite;
+            text-align: center;
+            padding: 1rem;
+        }
+        @keyframes loader-glitch {
+            0%, 100% { opacity: 1; transform: skewX(0); }
+            50% { opacity: 0.7; transform: skewX(2deg); }
+        }
+
 
         #video-bg {
             position: fixed;
@@ -188,6 +221,9 @@
             border: 1px solid rgba(185, 28, 28, 0.3);
             padding: 1.5rem;
             position: relative;
+            width: fit-content; /* Make container fit its content */
+            margin-left: auto;
+            margin-right: auto;
         }
         .terminal-header {
             font-family: var(--font-mono);
@@ -211,7 +247,7 @@
         .is-visible .skill-loader-bar {
             width: var(--skill-level);
         }
-
+        
         /* Cybernetic Button Effect */
         .cyber-button {
             position: relative;
@@ -244,6 +280,11 @@
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-text">ACCESSING CASE FILE #7761...</div>
+    </div>
+
     <!-- Background Video -->
     <video playsinline autoplay muted loop id="video-bg">
         <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
@@ -254,7 +295,7 @@
     <header class="min-h-screen flex items-center justify-center text-center text-white px-4">
         <div>
             <h1 class="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl glitch-effect" data-text="SEIF EL ISLAM">SEIF EL ISLAM</h1>
-            <p class="mt-4 text-lg md:text-2xl font-light tracking-widest">ملف تعريفي | محرر فيديو . مصمم جرافيك . مؤلف إعلانات</p>
+            <p class="mt-4 text-lg md:text-2xl font-light tracking-widest">محرر فيديو . مصمم جرافيك . مؤلف إعلانات</p>
         </div>
     </header>
 
@@ -294,6 +335,16 @@
                     <div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/1wgL00xdLrU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16 reveal-on-scroll">
+                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</h3>
+                <div class="max-w-4xl mx-auto video-monitor">
+                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div>
+                    <div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
+                    <div class="video-container">
+                        <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=Setting_the_same_202507081234_xc5aj0&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -344,6 +395,11 @@
     </footer>
 
     <script>
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            preloader.classList.add('loaded');
+        });
+
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
