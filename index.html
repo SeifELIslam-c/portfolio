@@ -84,21 +84,21 @@
         .star-rating input { display: none; }
         .star-rating label { font-size: 2rem; color: #444; cursor: pointer; transition: color 0.2s; }
         .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); }
-        
-        /* --- FIX START: This class was added --- */
         .text-accent-color { color: var(--accent-color); }
-        /* --- FIX END --- */
     </style>
 </head>
 <body>
     
+    <!-- Preloader -->
     <div id="preloader"><div class="loader-text">...جاري الوصول إلى ملف القضية #7761</div></div>
 
+    <!-- Background Video -->
     <video playsinline autoplay muted loop id="video-bg">
         <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
+    <!-- Hero Section -->
     <header class="min-h-screen flex items-center justify-center text-center text-white px-4">
         <div>
             <h1 class="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl glitch-effect" data-text="SEIF EL ISLAM">SEIF EL ISLAM</h1>
@@ -106,6 +106,7 @@
         </div>
     </header>
 
+    <!-- About & Skills Section -->
     <section class="content-section bg-black/80">
         <div class="container mx-auto max-w-4xl">
             <div class="terminal-container reveal-on-scroll">
@@ -132,6 +133,7 @@
         </div>
     </section>
 
+    <!-- Portfolio Showcase -->
     <section class="content-section evidence-board">
         <div class="container mx-auto max-w-6xl">
             <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="الأدلة المرفقة: معرض الأعمال">الأدلة المرفقة: معرض الأعمال</h2>
@@ -182,6 +184,7 @@
         </div>
     </section>
 
+    <!-- Service Request Section -->
     <section class="content-section bg-black/80 !pt-16">
         <div class="container mx-auto max-w-6xl">
             <div class="terminal-container reveal-on-scroll">
@@ -222,11 +225,13 @@
         </div>
     </section>
 
+    <!-- Reviews Section -->
     <section id="reviews" class="content-section bg-black/80 !pt-16">
         <div class="container mx-auto max-w-6xl">
             <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="ملفات الشهود">ملفات الشهود</h2>
             <div class="section-divider reveal-on-scroll"></div>
             
+            <!-- Button to show the form -->
             <div id="review-cta" class="text-center mt-8 reveal-on-scroll">
                 <button id="show-review-form-btn" class="cyber-button accent-btn font-display text-xl">
                     <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
@@ -234,6 +239,7 @@
                 </button>
             </div>
 
+            <!-- Review Form Container (initially hidden) -->
             <div id="review-form-container" class="terminal-container max-w-4xl mx-auto reveal-on-scroll hidden mt-8">
                  <div class="terminal-header flex justify-between items-center">
                     <span class="decode-effect">> تسجيل شهادة جديدة...</span>
@@ -266,8 +272,10 @@
                 </form>
             </div>
             
+            <!-- Display Reviews -->
             <div id="reviews-list" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                </div>
+                <!-- التقييمات ستظهر هنا -->
+            </div>
         </div>
     </section>
 
@@ -306,11 +314,14 @@
                 .then(data => {
                     if (data.success && data.data.length > 0) {
                         let reviewsHtml = '';
-                        data.data.forEach(review => {
-                            const date = new Date(review.createdAt).toLocaleDateString('ar-EG');
+                        // Sort reviews from newest to oldest
+                        const sortedData = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        
+                        sortedData.forEach(review => {
+                            const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
                             let starsHtml = '';
                             for(let i = 0; i < 5; i++) {
-                                // The class 'text-accent-color' is now defined in the <style> tag
+                                // The class 'text-accent-color' is defined in the <style> tag
                                 starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
                             }
                             reviewsHtml += `
@@ -325,15 +336,16 @@
                                         </div>
                                     </div>
                                     <blockquote class="border-r-4 border-accent-color pr-4 mt-2 mb-4 flex-grow">
-                                        {/* --- FIX START: Comment text color class was changed for better visibility --- */}
+                                        <!-- The erroneous React comments have been removed. This is now clean HTML. -->
                                         <p class="text-gray-300 text-right leading-relaxed italic">"${review.comment}"</p>
-                                        {/* --- FIX END --- */}
                                     </blockquote>
                                     <div class="flex justify-end mt-auto">${starsHtml}</div>
                                 </div>
                             `;
                         });
                         reviewsList.innerHTML = reviewsHtml;
+                         // Re-observe the new elements for the reveal animation
+                        document.querySelectorAll('#reviews-list .reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
                     } else {
                         reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
                     }
@@ -355,8 +367,12 @@
                 method: 'POST',
                 body: formData,
             })
-            .then(res => {
+            .then(res => res.json()) // Always parse the JSON response
+            .then(data => {
+                console.log('Submission successful:', data);
                 reviewForm.reset();
+                // Reset star rating UI
+                document.querySelectorAll('.star-rating input').forEach(input => input.checked = false);
                 submitBtnText.textContent = 'تم الإرسال بنجاح!';
                 setTimeout(() => {
                     fetchReviews(); 
@@ -374,14 +390,7 @@
             });
         });
 
-        // --- Initial Load ---
-        fetchReviews();
-
         // --- General Page Scripts ---
-        window.addEventListener('load', function() {
-            document.getElementById('preloader').classList.add('loaded');
-        });
-
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -390,9 +399,13 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
-        document.querySelectorAll('.evidence-photo-wrapper').forEach((el) => scrollObserver.observe(el));
-        document.querySelectorAll('.skill-item').forEach((el) => scrollObserver.observe(el));
+        window.addEventListener('load', function() {
+            document.getElementById('preloader').classList.add('loaded');
+            // Initial observation
+            document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
+            document.querySelectorAll('.evidence-photo-wrapper').forEach((el) => scrollObserver.observe(el));
+            document.querySelectorAll('.skill-item').forEach((el) => scrollObserver.observe(el));
+        });
         
         const serviceForm = document.getElementById('service-request-form');
         if (serviceForm) {
@@ -430,7 +443,11 @@
             }, { threshold: 0.5 });
             observer.observe(el);
         });
+
+        // --- Initial Load of reviews---
+        fetchReviews();
     });
     </script>
 </body>
 </html>
+
