@@ -12,43 +12,30 @@
         :root {
             --accent-color: #b91c1c; /* Blood Red */
             --accent-glow: rgba(185, 28, 28, 0.5);
-            --secondary-glow: rgba(0, 170, 255, 0.3);
             --whatsapp-color: #25D366;
             --whatsapp-glow: rgba(37, 211, 102, 0.5);
             --text-color: #d1d5db; /* Light Gray */
             --bg-color: #000000;
             --font-mono: 'Roboto Mono', monospace;
         }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Tajawal', sans-serif;
-            overflow-x: hidden;
-        }
-
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         .font-display { font-family: 'Changa', sans-serif; font-weight: 800; text-transform: uppercase; }
-        
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out 0.5s, visibility 0.5s ease-out 0.5s; }
         #preloader.loaded { opacity: 0; visibility: hidden; }
         .loader-text { font-family: var(--font-mono); font-size: 1.25rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); animation: loader-glitch 2s infinite; text-align: center; padding: 1rem; }
         @keyframes loader-glitch { 0%, 100% { opacity: 1; transform: skewX(0); } 50% { opacity: 0.7; transform: skewX(2deg); } }
-
         #video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; filter: grayscale(40%) brightness(60%); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.6) 100%), url('https://www.transparenttextures.com/patterns/scanlines.png'); z-index: -1; }
         .content-section { position: relative; z-index: 1; padding: 5rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-
         .glitch-effect { position: relative; color: white; text-shadow: 0 0 1px var(--accent-color), 0 0 3px var(--accent-color); }
         .glitch-effect:before, .glitch-effect:after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
         .glitch-effect:before { left: -1px; text-shadow: 1px 0 #00aaff; animation: glitch-anim-1 3s infinite linear alternate-reverse; }
         .glitch-effect:after { left: 1px; text-shadow: -1px 0 var(--accent-color); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
         @keyframes glitch-anim-1 { 0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); } 2% { clip-path: polygon(0 78%, 100% 78%, 100% 82%, 0 82%); } 4% { clip-path: polygon(0 45%, 100% 45%, 100% 48%, 0 48%); } 6% { clip-path: polygon(0 92%, 100% 92%, 100% 98%, 0 98%); } 8% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); } 100% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); } }
         @keyframes glitch-anim-2 { 0% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); } 3% { clip-path: polygon(0 8%, 100% 8%, 100% 12%, 0 12%); } 5% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); } 7% { clip-path: polygon(0 22%, 100% 22%, 100% 28%, 0 28%); } 9% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); } 100% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); } }
-
         .reveal-on-scroll { opacity: 0; filter: blur(5px); transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out, filter 1s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; filter: blur(0); transform: translateY(0); }
         .section-divider { height: 2px; width: 100px; background-color: var(--accent-color); margin: 2rem auto; }
-
         .evidence-board { background-color: #1a1a1a; background-image: url('https://www.transparenttextures.com/patterns/concrete-wall-3.png'); }
         .evidence-photo-wrapper { opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: scale(0.8) translateY(50px) rotate(-15deg); }
         .evidence-photo-wrapper.is-visible { opacity: 1; transform: scale(1) translateY(0) rotate(var(--rotate-deg, 0deg)); }
@@ -56,30 +43,25 @@
         .evidence-photo:hover { transform: scale(1.1) !important; z-index: 10; box-shadow: 10px 10px 25px rgba(0,0,0,0.5); }
         .evidence-photo::after { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 30px; background: rgba(255, 255, 224, 0.4); border-left: 1px dashed rgba(0,0,0,0.2); border-right: 1px dashed rgba(0,0,0,0.2); box-shadow: 0 0 1px rgba(0,0,0,0.2); }
         .evidence-caption { position: absolute; bottom: 10px; left: 10px; right: 10px; font-family: var(--font-mono); color: #333; }
-        
         .video-monitor { position: relative; background: #000; border: 1px solid rgba(185, 28, 28, 0.2); padding: 1rem; box-shadow: 0 0 40px var(--accent-glow); }
         .monitor-corners { content: ''; position: absolute; width: 20px; height: 20px; border-color: var(--accent-color); border-style: solid; }
         .video-monitor .c-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
         .video-monitor .c-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
         .video-monitor .c-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
         .video-monitor .c-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
-        .video-container { position: relative; width: 100%; overflow: hidden; padding-top: 56.25%; /* 16:9 */ }
+        .video-container { position: relative; width: 100%; overflow: hidden; padding-top: 56.25%; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
         .terminal-container { background: rgba(0,0,0,0.7); border: 1px solid rgba(185, 28, 28, 0.3); padding: 1.5rem; position: relative; }
-        .terminal-container.fit-content { width: fit-content; margin-left: auto; margin-right: auto; }
         .terminal-header { font-family: var(--font-mono); color: var(--accent-color); border-bottom: 1px solid rgba(185, 28, 28, 0.3); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
         .skill-loader { background-color: rgba(185, 28, 28, 0.1); padding: 0.25rem; border: 1px solid rgba(185, 28, 28, 0.2); }
         .skill-loader-bar { background-color: var(--accent-color); height: 1.25rem; width: 0; transition: width 2s ease-out; box-shadow: 0 0 10px var(--accent-glow); }
         .is-visible .skill-loader-bar { width: var(--skill-level); }
-        
         .form-input { width: 100%; background-color: rgba(10, 10, 10, 0.8); border: 1px solid rgba(185, 28, 28, 0.2); color: var(--text-color); padding: 0.75rem 1rem; font-family: 'Tajawal', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
         .form-input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
         .form-input::placeholder { color: #6b7280; }
         .select-wrapper { position: relative; }
         .select-wrapper::after { content: '▼'; font-size: 1rem; color: var(--accent-color); position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); pointer-events: none; }
         select.form-input { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-
         .cyber-button { position: relative; background: transparent; border: 2px solid; transition: color 0.4s; padding: 0.75rem 1.5rem; }
         .cyber-button .line { position: absolute; transition: transform 0.4s ease; }
         .cyber-button.accent-btn { border-color: var(--accent-color); color: var(--accent-color); }
@@ -88,7 +70,6 @@
         .cyber-button.whatsapp-btn { border-color: var(--whatsapp-color); color: var(--whatsapp-color); }
         .cyber-button.whatsapp-btn:hover { color: white; }
         .cyber-button.whatsapp-btn .line { background: var(--whatsapp-color); box-shadow: 0 0 10px var(--whatsapp-glow); }
-
         .cyber-button .line-top { top: 0; left: 0; width: 100%; height: 2px; transform: scaleX(0); transform-origin: left; }
         .cyber-button:hover .line-top { transform: scaleX(1); }
         .cyber-button .line-right { top: 0; right: 0; width: 2px; height: 100%; transform: scaleY(0); transform-origin: top; }
@@ -97,47 +78,15 @@
         .cyber-button:hover .line-bottom { transform: scaleX(1); }
         .cyber-button .line-left { bottom: 0; left: 0; width: 2px; height: 100%; transform: scaleY(0); transform-origin: bottom; }
         .cyber-button:hover .line-left { transform: scaleY(1); }
-
-        /* Review System Styles */
         .review-card { background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(185, 28, 28, 0.2); padding: 1.5rem; transition: all 0.3s ease; }
         .review-card:hover { transform: translateY(-5px); box-shadow: 0 0 15px var(--accent-glow); }
         .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
         .star-rating input { display: none; }
         .star-rating label { font-size: 2rem; color: #444; cursor: pointer; transition: color 0.2s; }
         .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); }
-        
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
-        .auth-modal.is-open { opacity: 1; visibility: visible; }
-        .auth-modal-content { width: 90%; max-width: 400px; }
-        .auth-tabs button { background: transparent; border: none; color: #6b7280; padding: 0.5rem 1rem; font-family: var(--font-mono); }
-        .auth-tabs button.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
     </style>
 </head>
 <body>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, setPersistence, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // --- Your web app's Firebase configuration ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "AIza...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        // --- Initialize Firebase ---
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // --- Global Variables ---
-        window.auth = auth;
-        window.db = db;
-        window.appId = appId;
-        window.firebase = {
-            setPersistence, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile,
-            collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, signInAnonymously, signInWithCustomToken
-        };
-    </script>
     
     <!-- Preloader -->
     <div id="preloader"><div class="loader-text">...جاري الوصول إلى ملف القضية #7761</div></div>
@@ -147,34 +96,6 @@
         <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
-
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="auth-modal">
-        <div class="auth-modal-content terminal-container">
-            <div class="flex justify-between items-center terminal-header">
-                <span class="decode-effect">> المصادقة مطلوبة</span>
-                <button id="close-auth-modal" class="text-2xl text-gray-400 hover:text-accent-color">&times;</button>
-            </div>
-            <div class="auth-tabs flex border-b border-gray-700 mb-4">
-                <button id="login-tab-btn" class="active">تسجيل الدخول</button>
-                <button id="register-tab-btn">إنشاء حساب</button>
-            </div>
-            <!-- Login Form -->
-            <form id="login-form" class="space-y-4">
-                <input type="email" id="login-email" class="form-input text-right" placeholder="البريد الإلكتروني" required>
-                <input type="password" id="login-password" class="form-input text-right" placeholder="كلمة المرور" required>
-                <button type="submit" class="cyber-button accent-btn w-full">دخول</button>
-            </form>
-            <!-- Register Form -->
-            <form id="register-form" class="hidden space-y-4">
-                <input type="text" id="register-name" class="form-input text-right" placeholder="الاسم الكامل" required>
-                <input type="email" id="register-email" class="form-input text-right" placeholder="البريد الإلكتروني" required>
-                <input type="password" id="register-password" class="form-input text-right" placeholder="كلمة المرور" required>
-                <button type="submit" class="cyber-button accent-btn w-full">تسجيل</button>
-            </form>
-            <p id="auth-error" class="text-red-500 text-sm mt-4 text-center"></p>
-        </div>
-    </div>
 
     <!-- Hero Section -->
     <header class="min-h-screen flex items-center justify-center text-center text-white px-4">
@@ -188,8 +109,7 @@
     <section class="content-section bg-black/80">
         <div class="container mx-auto max-w-4xl">
             <div class="terminal-container reveal-on-scroll">
-                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div>
-                <div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
+                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
                 <div class="terminal-header text-right text-lg md:text-xl lg:text-2xl decode-effect">> ملف المشتبه به: القضية رقم #7761</div>
                 <div class="text-base md:text-xl leading-relaxed text-right space-y-2 p-4">
                     <p class="reveal-on-scroll" style="transition-delay: 200ms;">سيف الإسلام. متخصص إبداعي متعدد المهارات،</p>
@@ -233,7 +153,6 @@
                     </div>
                 </div>
             </div>
-            <!-- New Video 2 -->
             <div class="mt-16 reveal-on-scroll">
                 <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 2">عينة الفيديو 2</h3>
                 <div class="max-w-4xl mx-auto video-monitor">
@@ -243,7 +162,6 @@
                     </div>
                 </div>
             </div>
-             <!-- New Video 3 -->
             <div class="mt-16 reveal-on-scroll">
                 <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 3">عينة الفيديو 3</h3>
                 <div class="max-w-4xl mx-auto video-monitor">
@@ -253,7 +171,6 @@
                     </div>
                 </div>
             </div>
-            <!-- AI Video -->
             <div class="mt-16 reveal-on-scroll">
                 <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</h3>
                 <div class="max-w-4xl mx-auto video-monitor">
@@ -272,16 +189,24 @@
             <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="ملفات الشهود">ملفات الشهود</h2>
             <div class="section-divider reveal-on-scroll"></div>
             
-            <!-- Review Form Container -->
-            <div id="review-form-container" class="terminal-container max-w-4xl mx-auto reveal-on-scroll hidden">
+            <!-- Button to show the form -->
+            <div id="review-cta" class="text-center mt-8 reveal-on-scroll">
+                <button id="show-review-form-btn" class="cyber-button accent-btn font-display text-xl">
+                    <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
+                    أضف شهادتك
+                </button>
+            </div>
+
+            <!-- Review Form Container (initially hidden) -->
+            <div id="review-form-container" class="terminal-container max-w-4xl mx-auto reveal-on-scroll hidden mt-8">
                  <div class="terminal-header flex justify-between items-center">
                     <span class="decode-effect">> تسجيل شهادة جديدة...</span>
-                    <div id="user-info" class="text-sm font-mono flex items-center gap-2">
-                        <span id="user-display-name"></span>
-                        <button id="logout-btn" class="text-accent-color hover:text-white">[تسجيل الخروج]</button>
-                    </div>
                 </div>
                 <form id="review-form" class="p-4 space-y-6">
+                    <div>
+                        <label for="review-name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
+                        <input type="text" id="review-name" name="name" class="form-input text-right" placeholder="أدخل اسمك الكامل..." required>
+                    </div>
                     <div>
                         <label class="font-mono text-lg text-gray-400 block mb-2 text-right">> التقييم:</label>
                         <div class="star-rating">
@@ -297,36 +222,27 @@
                         <textarea id="review-comment" name="comment" rows="5" class="form-input text-right" placeholder="اكتب شهادتك هنا..." required></textarea>
                     </div>
                     <div class="pt-4">
-                        <button type="submit" class="cyber-button accent-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
+                        <button type="submit" id="submit-review-btn" class="cyber-button accent-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
                             <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                            <span>إرسال الشهادة</span>
+                            <span id="submit-review-text">إرسال الشهادة</span>
                         </button>
                     </div>
                 </form>
             </div>
             
-            <!-- Call to Action for guests -->
-            <div id="review-cta" class="text-center mt-8 reveal-on-scroll">
-                <button id="open-auth-modal-btn" class="cyber-button accent-btn font-display text-xl">
-                    <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                    أضف شهادتك
-                </button>
-            </div>
-
             <!-- Display Reviews -->
             <div id="reviews-list" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- التقييمات ستظهر هنا بشكل فوري للجميع -->
+                <!-- التقييمات ستظهر هنا -->
             </div>
         </div>
     </section>
     
-    <!-- Service Request Section -->
-    <section class="content-section bg-black/80">
+    <!-- Service Request Section (Reduced top padding) -->
+    <section class="bg-black/80 pt-12 pb-20 px-4">
         <div class="container mx-auto max-w-6xl">
             <div class="terminal-container reveal-on-scroll">
-                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div>
-                <div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                <div class="terminal-header mt-12 text-lg md:text-xl lg:text-2xl decode-effect">> إرسال مهمة جديدة...</div>
+                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
+                <div class="terminal-header text-lg md:text-xl lg:text-2xl decode-effect">> إرسال مهمة جديدة...</div>
                 <form id="service-request-form" class="p-4 space-y-6">
                     <div>
                         <label for="name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
@@ -368,195 +284,105 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Wait for Firebase to be ready ---
-        const firebaseReady = new Promise(resolve => {
-            const interval = setInterval(() => {
-                if (window.firebase) {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, 50);
+        // --- CONFIGURATION ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbww9cJRZWH_cGwMzksTt-BiBGIqcE24rHWIQ4h1jN46IauUcJgYz05CxUOf9IE-kq1bww/exec';
+
+        // --- DOM Elements ---
+        const reviewForm = document.getElementById('review-form');
+        const reviewsList = document.getElementById('reviews-list');
+        const submitBtn = document.getElementById('submit-review-btn');
+        const submitBtnText = document.getElementById('submit-review-text');
+        const showReviewFormBtn = document.getElementById('show-review-form-btn');
+        const reviewCta = document.getElementById('review-cta');
+        const reviewFormContainer = document.getElementById('review-form-container');
+
+        // --- Show Review Form ---
+        showReviewFormBtn.addEventListener('click', () => {
+            reviewCta.classList.add('hidden');
+            reviewFormContainer.classList.remove('hidden');
         });
 
-        firebaseReady.then(() => {
-            // --- Deconstruct Firebase functions ---
-            const {
-                auth, db, appId,
-                setPersistence, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-                onAuthStateChanged, signOut, updateProfile, collection, addDoc, onSnapshot, serverTimestamp, query,
-                signInAnonymously, signInWithCustomToken
-            } = window;
-
-            // --- DOM Elements ---
-            const authModal = document.getElementById('auth-modal');
-            const openAuthModalBtn = document.getElementById('open-auth-modal-btn');
-            const closeAuthModalBtn = document.getElementById('close-auth-modal');
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const loginTabBtn = document.getElementById('login-tab-btn');
-            const registerTabBtn = document.getElementById('register-tab-btn');
-            const authError = document.getElementById('auth-error');
-            const reviewFormContainer = document.getElementById('review-form-container');
-            const reviewCta = document.getElementById('review-cta');
-            const logoutBtn = document.getElementById('logout-btn');
-            const userDisplayName = document.getElementById('user-display-name');
-            const reviewForm = document.getElementById('review-form');
-            const reviewsList = document.getElementById('reviews-list');
-
-            // --- Auth State Logic ---
-            // هذا الجزء يحدد واجهة المستخدم بناءً على حالة تسجيل الدخول
-            // ولكنه لا يمنع عرض التقييمات
-            setPersistence(auth, browserLocalPersistence).then(async () => {
-                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } catch (error) {
-                        console.error("Custom token sign-in failed, trying anonymous.", error);
-                        await signInAnonymously(auth);
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                }
-            });
-
-            onAuthStateChanged(auth, user => {
-                if (user && !user.isAnonymous) {
-                    // المستخدم مسجل دخوله: أظهر فورم إضافة تقييم
-                    reviewFormContainer.classList.remove('hidden');
-                    reviewCta.classList.add('hidden');
-                    authModal.classList.remove('is-open');
-                    userDisplayName.textContent = user.displayName || user.email;
-                } else {
-                    // المستخدم زائر: أظهر زر "أضف شهادتك"
-                    reviewFormContainer.classList.add('hidden');
-                    reviewCta.classList.remove('hidden');
-                    userDisplayName.textContent = '';
-                }
-            });
-
-            // --- Modal & Tab Logic ---
-            openAuthModalBtn.addEventListener('click', () => authModal.classList.add('is-open'));
-            closeAuthModalBtn.addEventListener('click', () => authModal.classList.remove('is-open'));
-            loginTabBtn.addEventListener('click', () => {
-                loginTabBtn.classList.add('active');
-                registerTabBtn.classList.remove('active');
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                authError.textContent = '';
-            });
-            registerTabBtn.addEventListener('click', () => {
-                registerTabBtn.classList.add('active');
-                loginTabBtn.classList.remove('active');
-                registerForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-                authError.textContent = '';
-            });
-
-            // --- Auth Form Handlers ---
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                authError.textContent = '';
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await updateProfile(userCredential.user, { displayName: name });
-                    registerForm.reset();
-                } catch (error) {
-                    authError.textContent = "خطأ في التسجيل: " + error.message;
-                }
-            });
-
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                authError.textContent = '';
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    loginForm.reset();
-                } catch (error) {
-                    authError.textContent = "خطأ في تسجيل الدخول: " + error.message;
-                }
-            });
-
-            logoutBtn.addEventListener('click', () => {
-                signOut(auth);
-            });
-
-            // --- Firestore: Submit Review ---
-            const reviewsCollectionPath = `/artifacts/${appId}/public/data/reviews`;
-            const reviewsCol = collection(db, reviewsCollectionPath);
-
-            reviewForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const user = auth.currentUser;
-                if (!user || user.isAnonymous) {
-                    alert('يجب تسجيل الدخول لترك تقييم.');
-                    return;
-                }
-                const rating = reviewForm.querySelector('input[name="rating"]:checked').value;
-                const comment = document.getElementById('review-comment').value;
-                try {
-                    await addDoc(reviewsCol, {
-                        name: user.displayName,
-                        userId: user.uid,
-                        rating: Number(rating),
-                        comment: comment,
-                        createdAt: serverTimestamp()
-                    });
-                    reviewForm.reset();
-                } catch (error) {
-                    console.error("Error adding document: ", error);
-                    alert('حدث خطأ أثناء إرسال التقييم.');
-                }
-            });
-
-            // --- ✅ Firestore: Display Reviews (Real-time & Public) ---
-            // هذا هو الجزء المسؤول عن عرض التقييمات للجميع وتحديثها تلقائياً
-            // onSnapshot يعمل بشكل فوري ولا يتطلب تسجيل دخول لمشاهدة البيانات
-            const q = query(reviewsCol);
-            onSnapshot(q, (snapshot) => {
-                let reviewsHtml = '';
-                let docs = snapshot.docs;
-                
-                // Sort manually by date in descending order
-                docs.sort((a, b) => {
-                    const dateA = a.data().createdAt?.toDate() || new Date(0);
-                    const dateB = b.data().createdAt?.toDate() || new Date(0);
-                    return dateB - dateA;
-                });
-
-                docs.forEach(doc => {
-                    const review = doc.data();
-                    const date = review.createdAt ? review.createdAt.toDate().toLocaleDateString('ar-EG') : 'غير معروف';
-                    let starsHtml = '';
-                    for(let i = 0; i < 5; i++) {
-                        starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
-                    }
-
-                    reviewsHtml += `
-                        <div class="review-card reveal-on-scroll">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-accent-color text-xl mr-4 ml-4">
-                                    ${review.name.charAt(0)}
+        // --- Fetch and Display Reviews ---
+        function fetchReviews() {
+            reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data.length > 0) {
+                        let reviewsHtml = '';
+                        data.data.forEach(review => {
+                            const date = new Date(review.createdAt).toLocaleDateString('ar-EG');
+                            let starsHtml = '';
+                            for(let i = 0; i < 5; i++) {
+                                starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
+                            }
+                            reviewsHtml += `
+                                <div class="review-card reveal-on-scroll">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-accent-color text-xl ml-4">
+                                            ${review.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white">${review.name}</h4>
+                                            <p class="text-xs text-gray-400 font-mono">${date}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end mb-2">${starsHtml}</div>
+                                    <p class="text-gray-300 text-right">"${review.comment}"</p>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-white">${review.name}</h4>
-                                    <p class="text-xs text-gray-400 font-mono">${date}</p>
-                                </div>
-                            </div>
-                            <div class="flex justify-end mb-2">${starsHtml}</div>
-                            <p class="text-gray-300 text-right">"${review.comment}"</p>
-                        </div>
-                    `;
+                            `;
+                        });
+                        reviewsList.innerHTML = reviewsHtml;
+                    } else {
+                        reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching reviews:', error);
+                    reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-red-500">> حدث خطأ أثناء تحميل الشهادات.</p>';
                 });
-                reviewsList.innerHTML = reviewsHtml || '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
-                // Re-arm the scroll observer for newly added elements
-                document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
+        }
+
+        // --- Handle Review Form Submission ---
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtnText.textContent = '...جاري الإرسال';
+
+            const name = document.getElementById('review-name').value;
+            const rating = reviewForm.querySelector('input[name="rating"]:checked').value;
+            const comment = document.getElementById('review-comment').value;
+
+            const reviewData = { name, rating, comment };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                body: JSON.stringify(reviewData),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(() => { 
+                reviewForm.reset();
+                submitBtnText.textContent = 'تم الإرسال بنجاح!';
+                setTimeout(() => {
+                    fetchReviews(); 
+                    submitBtnText.textContent = 'إرسال الشهادة';
+                    submitBtn.disabled = false;
+                    reviewFormContainer.classList.add('hidden'); // Hide form
+                    reviewCta.classList.remove('hidden'); // Show button again
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error submitting review:', error);
+                alert('حدث خطأ: ' + error.message);
+                submitBtnText.textContent = 'إرسال الشهادة';
+                submitBtn.disabled = false;
             });
         });
+
+        // --- Initial Load ---
+        fetchReviews();
 
         // --- General Page Scripts ---
         window.addEventListener('load', function() {
@@ -613,37 +439,5 @@
         });
     });
     </script>
-    <form id="feedbackForm">
-  <input type="text" name="name" placeholder="اسمك" required />
-  <input type="number" name="rating" min="1" max="5" placeholder="تقييمك (1-5)" required />
-  <textarea name="comment" placeholder="اترك تعليقك..." required></textarea>
-  <button type="submit">إرسال التقييم</button>
-</form>
-
-<script>
-  const form = document.getElementById("feedbackForm");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    const data = {
-      name: formData.get("name"),
-      rating: formData.get("rating"),
-      comment: formData.get("comment"),
-    };
-
-    await fetch("https://script.google.com/macros/s/FMNQ9cKz2h77zprZDmcsnLBgo7QAGmUbebuYTBNCstMTLsP6HW/exec", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    alert("✅ تم إرسال التقييم بنجاح!");
-    form.reset();
-  });
-</script>
 </body>
 </html>
