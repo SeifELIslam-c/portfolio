@@ -613,5 +613,37 @@
         });
     });
     </script>
+    <form id="feedbackForm">
+  <input type="text" name="name" placeholder="اسمك" required />
+  <input type="number" name="rating" min="1" max="5" placeholder="تقييمك (1-5)" required />
+  <textarea name="comment" placeholder="اترك تعليقك..." required></textarea>
+  <button type="submit">إرسال التقييم</button>
+</form>
+
+<script>
+  const form = document.getElementById("feedbackForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get("name"),
+      rating: formData.get("rating"),
+      comment: formData.get("comment"),
+    };
+
+    await fetch("https://script.google.com/macros/s/FMNQ9cKz2h77zprZDmcsnLBgo7QAGmUbebuYTBNCstMTLsP6HW/exec", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    alert("✅ تم إرسال التقييم بنجاح!");
+    form.reset();
+  });
+</script>
 </body>
 </html>
