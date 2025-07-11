@@ -183,8 +183,49 @@
         </div>
     </section>
 
+    <!-- Service Request Section -->
+    <section class="content-section bg-black/80 !pt-16">
+        <div class="container mx-auto max-w-6xl">
+            <div class="terminal-container reveal-on-scroll">
+                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
+                <div class="terminal-header text-lg md:text-xl lg:text-2xl decode-effect">> إرسال مهمة جديدة...</div>
+                <form id="service-request-form" class="p-4 space-y-6">
+                    <div>
+                        <label for="name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
+                        <input type="text" id="name" name="name" class="form-input text-right" placeholder="أدخل اسمك الكامل..." required>
+                    </div>
+                    <div>
+                        <label for="service-type" class="font-mono text-lg text-gray-400 block mb-2 text-right">> نوع الخدمة:</label>
+                        <div class="select-wrapper">
+                            <select id="service-type" name="service-type" class="form-input text-right" required>
+                                <option value="" disabled selected>-- اختر نوع الخدمة --</option>
+                                <option value="تحرير فيديو">تحرير فيديو (مونتاج)</option>
+                                <option value="تصميم جرافيك">تصميم جرافيك (شعارات، هويات بصرية)</option>
+                                <option value="بناء ملف تعريفي تفاعلي">بناء ملف تعريفي تفاعلي (CV/Portfolio)</option>
+                                <option value="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</option>
+                                <option value="كتابة إعلانية">كتابة إعلانية (Copywriting)</option>
+                                <option value="تصميم واجهة ويب">تصميم واجهة ويب (HTML/CSS)</option>
+                                <option value="استشارة">استشارة / أخرى</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="description" class="font-mono text-lg text-gray-400 block mb-2 text-right">> وصف الطلب:</label>
+                        <textarea id="description" name="description" rows="5" class="form-input text-right" placeholder="صف تفاصيل المشروع أو الطلب هنا..." required></textarea>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="cyber-button whatsapp-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
+                            <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
+                            <span>إرسال المهمة عبر واتساب</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- Reviews Section -->
-    <section id="reviews" class="content-section bg-black/80">
+    <section id="reviews" class="content-section bg-black/80 !pt-16">
         <div class="container mx-auto max-w-6xl">
             <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="ملفات الشهود">ملفات الشهود</h2>
             <div class="section-divider reveal-on-scroll"></div>
@@ -233,47 +274,6 @@
             <!-- Display Reviews -->
             <div id="reviews-list" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- التقييمات ستظهر هنا -->
-            </div>
-        </div>
-    </section>
-    
-    <!-- Service Request Section (Reduced top padding) -->
-    <section class="bg-black/80 pt-12 pb-20 px-4">
-        <div class="container mx-auto max-w-6xl">
-            <div class="terminal-container reveal-on-scroll">
-                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                <div class="terminal-header text-lg md:text-xl lg:text-2xl decode-effect">> إرسال مهمة جديدة...</div>
-                <form id="service-request-form" class="p-4 space-y-6">
-                    <div>
-                        <label for="name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
-                        <input type="text" id="name" name="name" class="form-input text-right" placeholder="أدخل اسمك الكامل..." required>
-                    </div>
-                    <div>
-                        <label for="service-type" class="font-mono text-lg text-gray-400 block mb-2 text-right">> نوع الخدمة:</label>
-                        <div class="select-wrapper">
-                            <select id="service-type" name="service-type" class="form-input text-right" required>
-                                <option value="" disabled selected>-- اختر نوع الخدمة --</option>
-                                <option value="تحرير فيديو">تحرير فيديو (مونتاج)</option>
-                                <option value="تصميم جرافيك">تصميم جرافيك (شعارات، هويات بصرية)</option>
-                                <option value="بناء ملف تعريفي تفاعلي">بناء ملف تعريفي تفاعلي (CV/Portfolio)</option>
-                                <option value="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</option>
-                                <option value="كتابة إعلانية">كتابة إعلانية (Copywriting)</option>
-                                <option value="تصميم واجهة ويب">تصميم واجهة ويب (HTML/CSS)</option>
-                                <option value="استشارة">استشارة / أخرى</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="description" class="font-mono text-lg text-gray-400 block mb-2 text-right">> وصف الطلب:</label>
-                        <textarea id="description" name="description" rows="5" class="form-input text-right" placeholder="صف تفاصيل المشروع أو الطلب هنا..." required></textarea>
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" class="cyber-button whatsapp-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
-                            <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                            <span>إرسال المهمة عبر واتساب</span>
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </section>
@@ -331,7 +331,7 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-end mb-2">${starsHtml}</div>
-                                    <p class="text-gray-300 text-right">"${review.comment}"</p>
+                                    <p class="text-gray-200 text-right leading-relaxed">"${review.comment}"</p>
                                 </div>
                             `;
                         });
@@ -360,13 +360,9 @@
                 body: formData
             })
             .then(res => {
-                // We might not be able to read the response due to CORS, but the request was sent.
-                // If the request itself fails, the .catch block will handle it.
                 if (!res.ok && res.type !== 'opaque') {
-                   // Only throw error if we can actually read the response and it's not ok
                    throw new Error('Server responded with an error.');
                 }
-                // Assume success if we reach here
                 reviewForm.reset();
                 submitBtnText.textContent = 'تم الإرسال بنجاح!';
                 setTimeout(() => {
