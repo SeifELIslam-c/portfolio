@@ -274,7 +274,7 @@
             
             <!-- Display Reviews -->
             <div id="reviews-list" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- التقييمات ستظهر هنا -->
+                <!-- Reviews will be dynamically inserted here -->
             </div>
         </div>
     </section>
@@ -286,7 +286,8 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- CONFIGURATION ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydRP7joOgF0JCEWQr6fBRI_TkmgewjmeX-h-QyXmnSvUz0GRAvva-CDKt9cLqCsEp7eg/exec';
+        // *** The SCRIPT_URL has been updated with your new link ***
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
 
         // --- DOM Elements ---
         const reviewForm = document.getElementById('review-form');
@@ -296,6 +297,14 @@
         const showReviewFormBtn = document.getElementById('show-review-form-btn');
         const reviewCta = document.getElementById('review-cta');
         const reviewFormContainer = document.getElementById('review-form-container');
+        
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1 });
 
         // --- Show Review Form ---
         showReviewFormBtn.addEventListener('click', () => {
@@ -306,22 +315,20 @@
         // --- Fetch and Display Reviews ---
         function fetchReviews() {
             reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
-            fetch(SCRIPT_URL)
+            fetch(SCRIPT_URL + '?cache_bust=' + new Date().getTime())
                 .then(response => {
                     if (!response.ok) throw new Error('Network response was not ok.');
                     return response.json();
                 })
                 .then(data => {
                     if (data.success && data.data.length > 0) {
-                        let reviewsHtml = '';
-                        // Sort reviews from newest to oldest
                         const sortedData = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                         
+                        let reviewsHtml = '';
                         sortedData.forEach(review => {
                             const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
                             let starsHtml = '';
                             for(let i = 0; i < 5; i++) {
-                                // The class 'text-accent-color' is defined in the <style> tag
                                 starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
                             }
                             reviewsHtml += `
@@ -336,7 +343,6 @@
                                         </div>
                                     </div>
                                     <blockquote class="border-r-4 border-accent-color pr-4 mt-2 mb-4 flex-grow">
-                                        <!-- The erroneous React comments have been removed. This is now clean HTML. -->
                                         <p class="text-gray-300 text-right leading-relaxed italic">"${review.comment}"</p>
                                     </blockquote>
                                     <div class="flex justify-end mt-auto">${starsHtml}</div>
@@ -344,7 +350,6 @@
                             `;
                         });
                         reviewsList.innerHTML = reviewsHtml;
-                         // Re-observe the new elements for the reveal animation
                         document.querySelectorAll('#reviews-list .reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
                     } else {
                         reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
@@ -367,20 +372,24 @@
                 method: 'POST',
                 body: formData,
             })
-            .then(res => res.json()) // Always parse the JSON response
+            .then(res => res.json())
             .then(data => {
-                console.log('Submission successful:', data);
-                reviewForm.reset();
-                // Reset star rating UI
-                document.querySelectorAll('.star-rating input').forEach(input => input.checked = false);
-                submitBtnText.textContent = 'تم الإرسال بنجاح!';
-                setTimeout(() => {
-                    fetchReviews(); 
+                if (data.success) {
+                    reviewForm.reset();
+                    document.querySelectorAll('.star-rating input').forEach(input => input.checked = false);
+                    submitBtnText.textContent = 'تم الإرسال بنجاح!';
+                    setTimeout(() => {
+                        fetchReviews(); 
+                        submitBtnText.textContent = 'إرسال الشهادة';
+                        submitBtn.disabled = false;
+                        reviewFormContainer.classList.add('hidden');
+                        reviewCta.classList.remove('hidden');
+                    }, 1500);
+                } else {
+                    alert('فشل الإرسال: ' + data.message);
                     submitBtnText.textContent = 'إرسال الشهادة';
                     submitBtn.disabled = false;
-                    reviewFormContainer.classList.add('hidden');
-                    reviewCta.classList.remove('hidden');
-                }, 1500);
+                }
             })
             .catch(error => {
                 console.error('Error submitting review:', error);
@@ -391,17 +400,8 @@
         });
 
         // --- General Page Scripts ---
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
         window.addEventListener('load', function() {
             document.getElementById('preloader').classList.add('loaded');
-            // Initial observation
             document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
             document.querySelectorAll('.evidence-photo-wrapper').forEach((el) => scrollObserver.observe(el));
             document.querySelectorAll('.skill-item').forEach((el) => scrollObserver.observe(el));
