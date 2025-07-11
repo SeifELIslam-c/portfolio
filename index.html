@@ -285,7 +285,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- CONFIGURATION ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbww9cJRZWH_cGwMzksTt-BiBGIqcE24rHWIQ4h1jN46IauUcJgYz05CxUOf9IE-kq1bww/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwr4pf0Yz322nUUTgsVUvh5IZYeNVIvMPMJg-OP5YzWDoUdPgrf4doz1YUpheQNoYUYPQ/exec';
 
         // --- DOM Elements ---
         const reviewForm = document.getElementById('review-form');
@@ -360,18 +360,11 @@
             const comment = document.getElementById('review-comment').value;
 
             const reviewData = { name, rating, comment };
-            
-            // This is a common workaround for Google Apps Script POST requests from a browser
-            // It redirects the request through a dummy form to avoid CORS issues.
-            const formData = new FormData();
-            formData.append('data', JSON.stringify(reviewData));
-            
+
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: new URLSearchParams(formData).toString(),
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
+                body: JSON.stringify(reviewData),
+                headers: { 'Content-Type': 'application/json' }
             })
             .then(res => res.json())
             .then(data => {
@@ -391,8 +384,7 @@
             })
             .catch(error => {
                 console.error('Error submitting review:', error);
-                // A generic error is often better here as CORS errors can be misleading.
-                alert('فشل إرسال التقييم. قد يكون هناك مشكلة في الاتصال أو في إعدادات النشر.');
+                alert('فشل إرسال التقييم. الخطأ: ' + error.message);
                 submitBtnText.textContent = 'إرسال الشهادة';
                 submitBtn.disabled = false;
             });
