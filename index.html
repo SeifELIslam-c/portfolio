@@ -306,7 +306,12 @@
         function fetchReviews() {
             reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
             fetch(SCRIPT_URL)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success && data.data.length > 0) {
                         let reviewsHtml = '';
@@ -355,27 +360,39 @@
             const comment = document.getElementById('review-comment').value;
 
             const reviewData = { name, rating, comment };
-
+            
+            // This is a common workaround for Google Apps Script POST requests from a browser
+            // It redirects the request through a dummy form to avoid CORS issues.
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(reviewData));
+            
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', 
-                body: JSON.stringify(reviewData),
-                headers: { 'Content-Type': 'application/json' }
+                body: new URLSearchParams(formData).toString(),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
             })
-            .then(() => { 
-                reviewForm.reset();
-                submitBtnText.textContent = 'تم الإرسال بنجاح!';
-                setTimeout(() => {
-                    fetchReviews(); 
-                    submitBtnText.textContent = 'إرسال الشهادة';
-                    submitBtn.disabled = false;
-                    reviewFormContainer.classList.add('hidden'); // Hide form
-                    reviewCta.classList.remove('hidden'); // Show button again
-                }, 2000);
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    reviewForm.reset();
+                    submitBtnText.textContent = 'تم الإرسال بنجاح!';
+                    setTimeout(() => {
+                        fetchReviews(); 
+                        submitBtnText.textContent = 'إرسال الشهادة';
+                        submitBtn.disabled = false;
+                        reviewFormContainer.classList.add('hidden');
+                        reviewCta.classList.remove('hidden');
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'حدث خطأ غير معروف من الخادم');
+                }
             })
             .catch(error => {
                 console.error('Error submitting review:', error);
-                alert('حدث خطأ: ' + error.message);
+                // A generic error is often better here as CORS errors can be misleading.
+                alert('فشل إرسال التقييم. قد يكون هناك مشكلة في الاتصال أو في إعدادات النشر.');
                 submitBtnText.textContent = 'إرسال الشهادة';
                 submitBtn.disabled = false;
             });
@@ -441,3 +458,4 @@
     </script>
 </body>
 </html>
+
