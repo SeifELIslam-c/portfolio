@@ -20,6 +20,13 @@
         }
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         .font-display { font-family: 'Changa', sans-serif; font-weight: 800; text-transform: uppercase; }
+        
+        /* --- Preloader --- */
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out 1.8s, visibility 0.5s ease-out 1.8s; }
+        #preloader.loaded { opacity: 0; visibility: hidden; }
+        .loader-text { font-family: var(--font-mono); font-size: 1.25rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); animation: loader-glitch 1.5s infinite; text-align: center; padding: 1rem; }
+        @keyframes loader-glitch { 0%, 100% { opacity: 1; transform: skewX(0); } 50% { opacity: 0.7; transform: skewX(2deg); } }
+
         #video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; filter: grayscale(40%) brightness(60%); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.6) 100%), url('https://www.transparenttextures.com/patterns/scanlines.png'); z-index: -1; }
         .content-section { position: relative; z-index: 1; padding: 5rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -85,6 +92,9 @@
 </head>
 <body>
     
+    <!-- Preloader -->
+    <div id="preloader"><div class="loader-text">...جاري الوصول إلى ملف القضية #7761</div></div>
+
     <!-- Background Video -->
     <video playsinline autoplay muted loop id="video-bg">
         <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
@@ -294,6 +304,7 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
 
         // --- DOM Elements ---
+        const preloader = document.getElementById('preloader');
         const reviewForm = document.getElementById('review-form');
         const reviewsList = document.getElementById('reviews-list');
         const submitBtn = document.getElementById('submit-review-btn');
@@ -310,38 +321,40 @@
             });
         }, { threshold: 0.1 });
 
+        // --- Preloader ---
+        window.addEventListener('load', () => {
+            if(preloader) {
+                // Automatically hide after a delay
+                setTimeout(() => {
+                    preloader.classList.add('loaded');
+                }, 200); // Fast hide after everything is loaded, the main delay is in CSS
+            }
+            // Initialize animations after load
+            document.querySelectorAll('.reveal-on-scroll, .evidence-photo-wrapper, .skill-item').forEach((el) => {
+                scrollObserver.observe(el);
+            });
+        });
+
         // --- Show Review Form ---
         showReviewFormBtn.addEventListener('click', () => {
             reviewCta.classList.add('hidden');
             reviewFormContainer.classList.remove('hidden');
         });
 
-        // --- Fetch and Display Reviews (IMPROVED) ---
+        // --- Fetch and Display Reviews (Robust) ---
         function fetchReviews() {
             reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
-            // Add cache-busting parameter to the URL to get fresh data
             fetch(SCRIPT_URL + '?action=get&cache_bust=' + new Date().getTime())
                 .then(response => {
                     if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
                     return response.json();
                 })
                 .then(data => {
-                    // Defensive check: Ensure data and data.data are what we expect
                     if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
-                        // Sort data by date, newest first
-                        const sortedData = data.data.sort((a, b) => {
-                            const dateA = new Date(a.createdAt);
-                            const dateB = new Date(b.createdAt);
-                            // Handle invalid dates gracefully
-                            if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-                                return 0;
-                            }
-                            return dateB - dateA;
-                        });
+                        const sortedData = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                         
                         let reviewsHtml = '';
                         sortedData.forEach(review => {
-                            // Defensive check for each review object to ensure it has all required properties
                             if (review && review.name && review.comment && review.rating && review.createdAt) {
                                 const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
                                 let starsHtml = '';
@@ -365,8 +378,6 @@
                                         <div class="flex justify-end mt-auto">${starsHtml}</div>
                                     </div>
                                 `;
-                            } else {
-                                console.warn('Skipping malformed review object:', review);
                             }
                         });
                         reviewsList.innerHTML = reviewsHtml;
@@ -374,7 +385,6 @@
                     } else if (data && data.success && Array.isArray(data.data) && data.data.length === 0) {
                         reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
                     } else {
-                        // This case handles when data.success is false or data format is wrong
                         throw new Error('البيانات المستلمة غير صالحة أو فارغة.');
                     }
                 })
@@ -391,10 +401,7 @@
             submitBtnText.textContent = '...جاري الإرسال';
 
             const formData = new FormData(reviewForm);
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: formData })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -420,13 +427,7 @@
             });
         });
 
-        // --- General Page Scripts ---
-        window.addEventListener('load', function() {
-            document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
-            document.querySelectorAll('.evidence-photo-wrapper').forEach((el) => scrollObserver.observe(el));
-            document.querySelectorAll('.skill-item').forEach((el) => scrollObserver.observe(el));
-        });
-        
+        // --- Service Request Form (WhatsApp) ---
         const serviceForm = document.getElementById('service-request-form');
         if (serviceForm) {
             serviceForm.addEventListener('submit', function(e) {
@@ -442,11 +443,12 @@
             });
         }
         
+        // --- Decode Text Effect on Scroll ---
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$*";
         document.querySelectorAll('.decode-effect').forEach(el => {
             let interval = null;
             const originalText = el.innerText;
-            const observer = new IntersectionObserver(entries => {
+            const decodeObserver = new IntersectionObserver(entries => {
                 if(entries[0].isIntersecting){
                     let iteration = 0;
                     clearInterval(interval);
@@ -458,10 +460,10 @@
                         if(iteration >= originalText.length) clearInterval(interval);
                         iteration += 1 / 2;
                     }, 40);
-                    observer.unobserve(el);
+                    decodeObserver.unobserve(el);
                 }
             }, { threshold: 0.5 });
-            observer.observe(el);
+            decodeObserver.observe(el);
         });
 
         // --- Initial Load of reviews---
@@ -470,4 +472,3 @@
     </script>
 </body>
 </html>
-
