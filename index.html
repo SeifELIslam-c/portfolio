@@ -20,10 +20,6 @@
         }
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         .font-display { font-family: 'Changa', sans-serif; font-weight: 800; text-transform: uppercase; }
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out 0.5s, visibility 0.5s ease-out 0.5s; }
-        #preloader.loaded { opacity: 0; visibility: hidden; }
-        .loader-text { font-family: var(--font-mono); font-size: 1.25rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); animation: loader-glitch 2s infinite; text-align: center; padding: 1rem; }
-        @keyframes loader-glitch { 0%, 100% { opacity: 1; transform: skewX(0); } 50% { opacity: 0.7; transform: skewX(2deg); } }
         #video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; filter: grayscale(40%) brightness(60%); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.6) 100%), url('https://www.transparenttextures.com/patterns/scanlines.png'); z-index: -1; }
         .content-section { position: relative; z-index: 1; padding: 5rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -89,9 +85,6 @@
 </head>
 <body>
     
-    <!-- Preloader -->
-    <div id="preloader"><div class="loader-text">...جاري الوصول إلى ملف القضية #7761</div></div>
-
     <!-- Background Video -->
     <video playsinline autoplay muted loop id="video-bg">
         <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
@@ -172,12 +165,24 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-16 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</h3>
+            
+            <!-- UGC Ads Section -->
+            <div class="mt-20 reveal-on-scroll">
+                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="إعلانات UGC إبداعية">إعلانات UGC إبداعية</h3>
+                
+                <!-- Video 1 -->
+                <div class="max-w-4xl mx-auto video-monitor mb-12">
+                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
+                    <div class="video-container">
+                        <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ai_masri_good_hrvboy&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
                 <div class="max-w-4xl mx-auto video-monitor">
                     <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
                     <div class="video-container">
-                        <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=Setting_the_same_202507081234_xc5aj0&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                         <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ayon_al_amira_w19lmf&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -286,7 +291,6 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- CONFIGURATION ---
-        // *** The SCRIPT_URL has been updated with your new link ***
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
 
         // --- DOM Elements ---
@@ -312,51 +316,70 @@
             reviewFormContainer.classList.remove('hidden');
         });
 
-        // --- Fetch and Display Reviews ---
+        // --- Fetch and Display Reviews (IMPROVED) ---
         function fetchReviews() {
             reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
-            fetch(SCRIPT_URL + '?cache_bust=' + new Date().getTime())
+            // Add cache-busting parameter to the URL to get fresh data
+            fetch(SCRIPT_URL + '?action=get&cache_bust=' + new Date().getTime())
                 .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok.');
+                    if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
                     return response.json();
                 })
                 .then(data => {
-                    if (data.success && data.data.length > 0) {
-                        const sortedData = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    // Defensive check: Ensure data and data.data are what we expect
+                    if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+                        // Sort data by date, newest first
+                        const sortedData = data.data.sort((a, b) => {
+                            const dateA = new Date(a.createdAt);
+                            const dateB = new Date(b.createdAt);
+                            // Handle invalid dates gracefully
+                            if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+                                return 0;
+                            }
+                            return dateB - dateA;
+                        });
                         
                         let reviewsHtml = '';
                         sortedData.forEach(review => {
-                            const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                            let starsHtml = '';
-                            for(let i = 0; i < 5; i++) {
-                                starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
-                            }
-                            reviewsHtml += `
-                                <div class="review-card reveal-on-scroll">
-                                    <div class="flex items-center mb-4">
-                                        <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-accent-color text-xl ml-4">
-                                            ${review.name.charAt(0)}
+                            // Defensive check for each review object to ensure it has all required properties
+                            if (review && review.name && review.comment && review.rating && review.createdAt) {
+                                const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+                                let starsHtml = '';
+                                for(let i = 0; i < 5; i++) {
+                                    starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
+                                }
+                                reviewsHtml += `
+                                    <div class="review-card reveal-on-scroll">
+                                        <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-accent-color text-xl ml-4">
+                                                ${review.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-white text-lg">${review.name}</h4>
+                                                <p class="text-xs text-gray-400 font-mono">${date}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 class="font-bold text-white text-lg">${review.name}</h4>
-                                            <p class="text-xs text-gray-400 font-mono">${date}</p>
-                                        </div>
+                                        <blockquote class="border-r-4 border-accent-color pr-4 mt-2 mb-4 flex-grow">
+                                            <p class="text-gray-300 text-right leading-relaxed italic">"${review.comment}"</p>
+                                        </blockquote>
+                                        <div class="flex justify-end mt-auto">${starsHtml}</div>
                                     </div>
-                                    <blockquote class="border-r-4 border-accent-color pr-4 mt-2 mb-4 flex-grow">
-                                        <p class="text-gray-300 text-right leading-relaxed italic">"${review.comment}"</p>
-                                    </blockquote>
-                                    <div class="flex justify-end mt-auto">${starsHtml}</div>
-                                </div>
-                            `;
+                                `;
+                            } else {
+                                console.warn('Skipping malformed review object:', review);
+                            }
                         });
                         reviewsList.innerHTML = reviewsHtml;
                         document.querySelectorAll('#reviews-list .reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
-                    } else {
+                    } else if (data && data.success && Array.isArray(data.data) && data.data.length === 0) {
                         reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
+                    } else {
+                        // This case handles when data.success is false or data format is wrong
+                        throw new Error('البيانات المستلمة غير صالحة أو فارغة.');
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching reviews:', error);
+                    console.error('Error fetching or processing reviews:', error);
                     reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-red-500">> حدث خطأ أثناء تحميل الشهادات.</p>';
                 });
         }
@@ -386,14 +409,12 @@
                         reviewCta.classList.remove('hidden');
                     }, 1500);
                 } else {
-                    alert('فشل الإرسال: ' + data.message);
-                    submitBtnText.textContent = 'إرسال الشهادة';
-                    submitBtn.disabled = false;
+                    throw new Error(data.message || 'فشل إرسال الطلب من الخادم.');
                 }
             })
             .catch(error => {
                 console.error('Error submitting review:', error);
-                alert('فشل إرسال التقييم. يرجى المحاولة مرة أخرى.');
+                alert('فشل إرسال التقييم. يرجى التحقق من اتصالك والمحاولة مرة أخرى.');
                 submitBtnText.textContent = 'إرسال الشهادة';
                 submitBtn.disabled = false;
             });
@@ -401,7 +422,6 @@
 
         // --- General Page Scripts ---
         window.addEventListener('load', function() {
-            document.getElementById('preloader').classList.add('loaded');
             document.querySelectorAll('.reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
             document.querySelectorAll('.evidence-photo-wrapper').forEach((el) => scrollObserver.observe(el));
             document.querySelectorAll('.skill-item').forEach((el) => scrollObserver.observe(el));
