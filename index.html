@@ -21,13 +21,6 @@
         body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         .font-display { font-family: 'Changa', sans-serif; font-weight: 800; text-transform: uppercase; }
         
-        /* --- Preloader with Video BG --- */
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out 1.8s, visibility 0.5s ease-out 1.8s; }
-        #preloader-video { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; object-fit: cover; transform: translate(-50%, -50%); z-index: -1; filter: brightness(0.4); }
-        #preloader.loaded { opacity: 0; visibility: hidden; }
-        .loader-text { position: relative; z-index: 1; font-family: var(--font-mono); font-size: 1.25rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); animation: loader-glitch 1.5s infinite; text-align: center; padding: 1rem; }
-        @keyframes loader-glitch { 0%, 100% { opacity: 1; transform: skewX(0); } 50% { opacity: 0.7; transform: skewX(2deg); } }
-
         #video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; filter: grayscale(40%) brightness(60%); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.6) 100%), url('https://www.transparenttextures.com/patterns/scanlines.png'); z-index: -1; }
         .content-section { position: relative; z-index: 1; padding: 5rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -98,14 +91,6 @@
     </style>
 </head>
 <body>
-    
-    <!-- Preloader -->
-    <div id="preloader">
-        <video playsinline autoplay muted loop id="preloader-video">
-            <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752469235/9694224-hd_1920_1080_25fps_gy4ri3.mp4" type="video/mp4">
-        </video>
-        <div class="loader-text">...جاري الوصول إلى معرض الأعمال ملف القضية #7761</div>
-    </div>
 
     <!-- Background Video -->
     <video playsinline autoplay muted loop id="video-bg">
@@ -335,7 +320,6 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
 
         // --- DOM Elements ---
-        const preloader = document.getElementById('preloader');
         const reviewForm = document.getElementById('review-form');
         const reviewsList = document.getElementById('reviews-list');
         const submitBtn = document.getElementById('submit-review-btn');
@@ -352,12 +336,8 @@
             });
         }, { threshold: 0.1 });
 
-        // --- Preloader ---
+        // Initialize animations after load
         window.addEventListener('load', () => {
-            if(preloader) {
-                preloader.classList.add('loaded');
-            }
-            // Initialize animations after load
             document.querySelectorAll('.reveal-on-scroll, .evidence-photo-wrapper, .skill-item').forEach((el) => {
                 scrollObserver.observe(el);
             });
@@ -500,4 +480,3 @@
     </script>
 </body>
 </html>
-
