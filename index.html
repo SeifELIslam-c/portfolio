@@ -28,7 +28,16 @@
         #cursor-dot { width: 8px; height: 8px; background-color: var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, opacity 0.3s; }
         #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s; }
         /* --- شاشة التحميل --- */
-        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono', monospace; color: var(--glow-color); transition: opacity 1s ease-out 0.5s; }
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease-out 0.5s; }
+        .spinner {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 9px solid;
+            border-color: var(--glow-color) #0000;
+            animation: spinner-anim 0.8s infinite linear;
+        }
+        @keyframes spinner-anim { to { transform: rotate(1turn); } }
         /* --- الهيكل الرئيسي --- */
         #three-canvas { position: fixed; top: 0; left: 0; outline: none; z-index: 1; }
         #main-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in; scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent; }
@@ -61,7 +70,8 @@
     <div id="cursor-ring"></div>
 
     <div id="loading-screen">
-         </div>
+        <div class="spinner"></div>
+    </div>
 
     <canvas id="three-canvas"></canvas>
 
@@ -171,8 +181,8 @@
             إعداد_المؤثرات_البصرية();
             إعداد_خلفية_المجرات();
             إعداد_الكائنات_ثلاثية_الأبعاد();
+            إعداد_الأصوات();
             
-            تهيئة_حركة_التمهيد(); // <-- هذه الدالة تم تعديلها
             عرض_المهارات();
             عرض_معرض_الأعمال();
             عرض_نموذج_المراجعة();
@@ -180,6 +190,7 @@
             جلب_وعرض_المراجعات();
 
             إضافة_معالجات_الأحداث();
+            بدء_التجربة();
             تحريك();
         }
 
@@ -218,13 +229,7 @@
             const هندسة_الجسيمات = new THREE.BufferGeometry();
             هندسة_الجسيمات.setAttribute('position', new THREE.BufferAttribute(مواقع, 3));
             
-            const مادة_الجسيمات = new THREE.PointsMaterial({
-                color: 0x00ff89,
-                size: 0.02,
-                transparent: true,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false,
-            });
+            const مادة_الجسيمات = new THREE.PointsMaterial({ color: 0x00ff89, size: 0.02, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
             const جسيمات = new THREE.Points(هندسة_الجسيمات, مادة_الجسيمات);
             مجموعة_الخلفية.add(جسيمات);
             مشهد.add(مجموعة_الخلفية);
@@ -253,16 +258,15 @@
         }
 
         function إعداد_الأصوات() {
-            if (Tone.context.state !== 'running') {
-                Tone.start();
-            }
-            صوت_محيطي = new Tone.Noise("pink").toDestination().start();
+            // -- ✨ الإصلاح --
+            // الوصول للمكونات عبر Tone.default
+            صوت_محيطي = new Tone.default.Noise("pink").toDestination();
             صوت_محيطي.volume.value = -40;
 
             مُشغّل_صوت = {
-                تحويم: new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination(),
-                نقر: new Tone.MembraneSynth().toDestination(),
-                نجاح: new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination(),
+                تحويم: new Tone.default.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination(),
+                نقر: new Tone.default.MembraneSynth().toDestination(),
+                نجاح: new Tone.default.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination(),
             };
         }
 
@@ -270,12 +274,7 @@
         function عرض_المهارات() {
             const حاوية = document.getElementById('skills-grid');
             بيانات_المهارات.forEach((مهارة, فهرس) => {
-                const بطاقة = `
-                    <div class="glass-card p-6 text-center flex flex-col items-center justify-center reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;">
-                        <svg class="w-16 h-16 mb-4" style="color: var(--glow-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${مهارة.icon}</svg>
-                        <h3 class="font-display text-xl">${مهارة.name}</h3>
-                    </div>
-                `;
+                const بطاقة = `<div class="glass-card p-6 text-center flex flex-col items-center justify-center reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;"><svg class="w-16 h-16 mb-4" style="color: var(--glow-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${مهارة.icon}</svg><h3 class="font-display text-xl">${مهارة.name}</h3></div>`;
                 حاوية.innerHTML += بطاقة;
             });
         }
@@ -304,13 +303,7 @@
         }
 
         // --- الحركات والتفاعلات ---
-        function تهيئة_حركة_التمهيد() {
-            // == الإصلاح: تم تجاوز تسلسل التمهيد النصي بناءً على الطلب للتحميل المباشر ==
-            setTimeout(بدء_التجربة, 100); // بدء التجربة مباشرة بعد فترة قصيرة
-        }
-
         function بدء_التجربة() {
-            إعداد_الأصوات();
             شاشة_التحميل.style.opacity = '0';
             شاشة_التحميل.addEventListener('transitionend', () => شاشة_التحميل.style.display = 'none');
             
@@ -360,6 +353,21 @@
             window.addEventListener('resize', عند_تغيير_حجم_النافذة);
             window.addEventListener('mousemove', عند_تحريك_الفأرة);
             المحتوى_الرئيسي.addEventListener('scroll', معالجة_التمرير);
+
+            const بدء_الصوت = () => {
+                // -- ✨ الإصلاح --
+                // التحقق من حالة الصوت وبدء تشغيله عبر Tone.default
+                if (Tone.default.context.state !== 'running') {
+                    Tone.default.start().then(() => {
+                        if (صوت_محيطي) صوت_محيطي.start();
+                        console.log("Audio context started successfully.");
+                    });
+                }
+                window.removeEventListener('click', بدء_الصوت);
+                window.removeEventListener('mousemove', بدء_الصوت);
+            };
+            window.addEventListener('click', بدء_الصوت);
+            window.addEventListener('mousemove', بدء_الصوت);
 
             document.querySelectorAll('a, button, .glass-card, .star-rating label').forEach(عنصر => {
                 عنصر.addEventListener('mouseenter', () => مُشغّل_صوت?.تحويم.triggerAttackRelease("C5", "16n"));
@@ -441,7 +449,7 @@
         }
 
         // --- بدء التنفيذ ---
-        تهيئة();
+        window.onload = تهيئة;
     </script>
 </body>
 </html>
