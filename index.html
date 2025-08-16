@@ -29,9 +29,6 @@
         #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s; }
         /* --- شاشة التحميل --- */
         #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono', monospace; color: var(--glow-color); transition: opacity 1s ease-out 0.5s; }
-        #boot-sequence { width: 350px; }
-        #boot-sequence p { margin: 2px 0; white-space: pre; }
-        .boot-hidden { opacity: 0; }
         /* --- الهيكل الرئيسي --- */
         #three-canvas { position: fixed; top: 0; left: 0; outline: none; z-index: 1; }
         #main-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in; scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent; }
@@ -64,15 +61,7 @@
     <div id="cursor-ring"></div>
 
     <div id="loading-screen">
-        <div id="boot-sequence">
-            <p class="boot-hidden">> SEIF OS v12.0 جاري التشغيل...</p>
-            <p class="boot-hidden">> تحميل أنظمة الملفات... [تم]</p>
-            <p class="boot-hidden">> بدء النواة الرسومية... [تم]</p>
-            <p class="boot-hidden">> ترجمة المظللات... [تم]</p>
-            <p class="boot-hidden">> إنشاء اتصال كمومي...</p>
-            <p class="boot-hidden">> تم الاتصال بنجاح. أهلاً بك.</p>
-        </div>
-    </div>
+         </div>
 
     <canvas id="three-canvas"></canvas>
 
@@ -136,7 +125,7 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
         import { gsap } from 'gsap';
-        import * as Tone from 'tone'; // <-- هذا هو الإصلاح الرئيسي
+        import * as Tone from 'tone';
 
         // --- الإعدادات العامة والمتغيرات ---
         let مشهد, كاميرا, عارض, مُلحن_المؤثرات, مؤشر_الفأرة, صوت_محيطي, مُشغّل_صوت;
@@ -183,7 +172,7 @@
             إعداد_خلفية_المجرات();
             إعداد_الكائنات_ثلاثية_الأبعاد();
             
-            تهيئة_حركة_التمهيد();
+            تهيئة_حركة_التمهيد(); // <-- هذه الدالة تم تعديلها
             عرض_المهارات();
             عرض_معرض_الأعمال();
             عرض_نموذج_المراجعة();
@@ -242,33 +231,18 @@
         }
         
         function إعداد_الكائنات_ثلاثية_الأبعاد() {
-            // كائن لقسم المهارات - مكعب برمجي
             const هندسة_المكعب = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
             const هندسة_الإطار = new THREE.WireframeGeometry(هندسة_المكعب);
-            const مادة_الإطار = new THREE.LineBasicMaterial({
-                color: 0x00ff89,
-                linewidth: 2,
-                transparent: true,
-                opacity: 0.5
-            });
+            const مادة_الإطار = new THREE.LineBasicMaterial({ color: 0x00ff89, linewidth: 2, transparent: true, opacity: 0.5 });
             const مكعب_مهارات = new THREE.LineSegments(هندسة_الإطار, مادة_الإطار);
             مكعب_مهارات.position.set(-3, 8, -2);
             مكعب_مهارات.name = 'مكعب_المهارات';
             كائنات_ثلاثية_الأبعاد.add(مكعب_مهارات);
 
-            // كائن لقسم معرض الأعمال - أيقونة تشغيل
             const شكل_التشغيل = new THREE.Shape();
-            شكل_التشغيل.moveTo(0, 0.6);
-            شكل_التشغيل.lineTo(0, -0.6);
-            شكل_التشغيل.lineTo(1, 0);
-            شكل_التشغيل.lineTo(0, 0.6);
+            شكل_التشغيل.moveTo(0, 0.6); شكل_التشغيل.lineTo(0, -0.6); شكل_التشغيل.lineTo(1, 0); شكل_التشغيل.lineTo(0, 0.6);
             const هندسة_التشغيل = new THREE.ShapeGeometry(شكل_التشغيل);
-            const مادة_التشغيل = new THREE.MeshBasicMaterial({
-                color: 0x9400ff,
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.7
-            });
+            const مادة_التشغيل = new THREE.MeshBasicMaterial({ color: 0x9400ff, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
             const أيقونة_تشغيل = new THREE.Mesh(هندسة_التشغيل, مادة_التشغيل);
             أيقونة_تشغيل.position.set(3, 22, -3);
             أيقونة_تشغيل.rotation.y = -Math.PI / 4;
@@ -311,77 +285,28 @@
             بيانات_معرض_الأعمال.forEach((عمل, فهرس) => {
                 let محتوى_البطاقة = '';
                 if (عمل.type === 'video') {
-                    محتوى_البطاقة = `
-                        <h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3>
-                        <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border-2 border-transparent hover:border-green-400 transition-all duration-300">
-                           <iframe src="${عمل.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>
-                        </div>`;
+                    محتوى_البطاقة = `<h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3><div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border-2 border-transparent hover:border-green-400 transition-all duration-300"><iframe src="${عمل.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg"></iframe></div>`;
                 } else if (عمل.type === 'image') {
                     const صور_html = عمل.images.map(صورة => `<img src="${صورة.url}" alt="${صورة.alt}" class="w-full h-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300">`).join('');
-                    محتوى_البطاقة = `
-                        <h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            ${صور_html}
-                        </div>`;
+                    محتوى_البطاقة = `<h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-4">${صور_html}</div>`;
                 }
-
-                const عنصر = `
-                    <div class="glass-card p-8 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 150}ms;">
-                        ${محتوى_البطاقة}
-                    </div>`;
+                const عنصر = `<div class="glass-card p-8 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 150}ms;">${محتوى_البطاقة}</div>`;
                 حاوية.innerHTML += عنصر;
             });
         }
         
         function عرض_نموذج_المراجعة() {
-             document.getElementById('review-form').innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" name="name" placeholder="الاسم" required class="form-input">
-                    <input type="text" name="project" placeholder="نوع المشروع" required class="form-input">
-                </div>
-                <textarea name="review" placeholder="شهادتك..." required class="form-input w-full" rows="4"></textarea>
-                <div class="flex flex-col items-center">
-                     <p class="mb-2">تقييمك:</p>
-                     <div class="star-rating">
-                        <input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label>
-                        <input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label>
-                        <input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label>
-                        <input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label>
-                        <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label>
-                    </div>
-                </div>
-                <button type="submit" class="cyber-button w-full mt-4">إرسال الشهادة</button>
-            `;
+             document.getElementById('review-form').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" name="name" placeholder="الاسم" required class="form-input"><input type="text" name="project" placeholder="نوع المشروع" required class="form-input"></div><textarea name="review" placeholder="شهادتك..." required class="form-input w-full" rows="4"></textarea><div class="flex flex-col items-center"><p class="mb-2">تقييمك:</p><div class="star-rating"><input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label><input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label><input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label><input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label><input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label></div></div><button type="submit" class="cyber-button w-full mt-4">إرسال الشهادة</button>`;
         }
 
         function عرض_نموذج_التواصل() {
-            document.getElementById('service-request-form').innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" id="contact-name" name="name" placeholder="الاسم الكامل" required class="form-input">
-                    <input type="email" id="contact-email" name="email" placeholder="البريد الإلكتروني" required class="form-input">
-                </div>
-                <select id="contact-service" name="service" class="form-input w-full">
-                    <option>اختر نوع الخدمة</option>
-                    <option value="تطوير ويب">تطوير ويب</option>
-                    <option value="تطوير جوال">تطوير جوال</option>
-                    <option value="مونتاج فيديو">مونتاج فيديو</option>
-                    <option value="تصميم جرافيك">تصميم جرافيك</option>
-                    <option value="استشارة">استشارة</option>
-                </select>
-                <textarea id="contact-details" name="details" placeholder="تفاصيل المشروع..." required class="form-input w-full" rows="5"></textarea>
-                <button type="submit" class="cyber-button w-full">إرسال الطلب عبر واتساب</button>
-            `;
+            document.getElementById('service-request-form').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" id="contact-name" name="name" placeholder="الاسم الكامل" required class="form-input"><input type="email" id="contact-email" name="email" placeholder="البريد الإلكتروني" required class="form-input"></div><select id="contact-service" name="service" class="form-input w-full"><option>اختر نوع الخدمة</option><option value="تطوير ويب">تطوير ويب</option><option value="تطوير جوال">تطوير جوال</option><option value="مونتاج فيديو">مونتاج فيديو</option><option value="تصميم جرافيك">تصميم جرافيك</option><option value="استشارة">استشارة</option></select><textarea id="contact-details" name="details" placeholder="تفاصيل المشروع..." required class="form-input w-full" rows="5"></textarea><button type="submit" class="cyber-button w-full">إرسال الطلب عبر واتساب</button>`;
         }
 
         // --- الحركات والتفاعلات ---
         function تهيئة_حركة_التمهيد() {
-            const bootLines = document.querySelectorAll('#boot-sequence p');
-            let delay = 0;
-            bootLines.forEach(line => {
-                setTimeout(() => line.classList.remove('boot-hidden'), delay);
-                delay += Math.random() * 250 + 50;
-            });
-            setTimeout(بدء_التجربة, delay + 1000);
+            // == الإصلاح: تم تجاوز تسلسل التمهيد النصي بناءً على الطلب للتحميل المباشر ==
+            setTimeout(بدء_التجربة, 100); // بدء التجربة مباشرة بعد فترة قصيرة
         }
 
         function بدء_التجربة() {
@@ -403,27 +328,13 @@
                 if (إطار_الحركة) cancelAnimationFrame(إطار_الحركة);
                 إطار_الحركة = requestAnimationFrame(() => {
                     const حدود = عنصر.getBoundingClientRect();
-                    const س = حدث.clientX - حدود.left;
-                    const ص = حدث.clientY - حدود.top;
-                    const نسبة_س = (س / حدود.width - 0.5) * 2;
-                    const نسبة_ص = (ص / حدود.height - 0.5) * 2;
-                    const قوة_الميلان = 8;
-                    
-                    gsap.to(عنصر, {
-                        duration: 0.5,
-                        rotationY: قوة_الميلان * نسبة_س,
-                        rotationX: -قوة_الميلان * نسبة_ص,
-                        ease: 'power1.out'
-                    });
+                    const س = حدث.clientX - حدود.left; const ص = حدث.clientY - حدود.top;
+                    const نسبة_س = (س / حدود.width - 0.5) * 2; const نسبة_ص = (ص / حدود.height - 0.5) * 2;
+                    gsap.to(عنصر, { duration: 0.5, rotationY: 8 * نسبة_س, rotationX: -8 * نسبة_ص, ease: 'power1.out' });
                 });
             });
             عنصر.addEventListener('mouseleave', () => {
-                gsap.to(عنصر, {
-                    duration: 0.8,
-                    rotationY: 0,
-                    rotationX: 0,
-                    ease: 'elastic.out(1, 0.3)'
-                });
+                gsap.to(عنصر, { duration: 0.8, rotationY: 0, rotationX: 0, ease: 'elastic.out(1, 0.3)' });
             });
         }
         
@@ -433,23 +344,15 @@
                 const استجابة = await fetch(`${رابط_جوجل_سكريبت}?action=read`);
                 const بيانات = await استجابة.json();
                 const حاوية = document.getElementById('reviews-list');
-                حاوية.innerHTML = ''; // تفريغ الحاوية قبل الإضافة
+                حاوية.innerHTML = '';
                 بيانات.forEach((مراجعة, فهرس) => {
                     if (!مراجعة.name || !مراجعة.review) return;
                     let نجوم = '★'.repeat(مراجعة.rating || 5) + '☆'.repeat(5 - (مراجعة.rating || 5));
-                    const بطاقة = `
-                        <div class="glass-card p-6 reveal-on-scroll" data-tilt style="transition-delay: ${fهرس * 100}ms;">
-                            <p class="text-xl font-bold mb-2">${مراجعة.name}</p>
-                            <p class="text-sm text-gray-400 mb-3">${مراجعة.project}</p>
-                            <p class="mb-4">"${مراجعة.review}"</p>
-                            <div class="text-yellow-400 text-xl">${نجوم}</div>
-                        </div>`;
+                    const بطاقة = `<div class="glass-card p-6 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;"><p class="text-xl font-bold mb-2">${مراجعة.name}</p><p class="text-sm text-gray-400 mb-3">${مراجعة.project}</p><p class="mb-4">"${مراجعة.review}"</p><div class="text-yellow-400 text-xl">${نجوم}</div></div>`;
                     حاوية.innerHTML += بطاقة;
                 });
                 تفعيل_كل_تأثيرات_الميلان();
-            } catch (خطأ) {
-                console.error('فشل في جلب المراجعات:', خطأ);
-            }
+            } catch (خطأ) { console.error('فشل في جلب المراجعات:', خطأ); }
         }
         
         // --- معالجات الأحداث ---
@@ -458,15 +361,13 @@
             window.addEventListener('mousemove', عند_تحريك_الفأرة);
             المحتوى_الرئيسي.addEventListener('scroll', معالجة_التمرير);
 
-            // إضافة صوت التحويم والنقر للعناصر التفاعلية
             document.querySelectorAll('a, button, .glass-card, .star-rating label').forEach(عنصر => {
-                عنصر.addEventListener('mouseenter', () => مُشغّل_صوت.تحويم.triggerAttackRelease("C5", "16n"));
-                عنصر.addEventListener('click', () => مُشغّل_صوت.نقر.triggerAttackRelease("C2", "8n"));
+                عنصر.addEventListener('mouseenter', () => مُشغّل_صوت?.تحويم.triggerAttackRelease("C5", "16n"));
+                عنصر.addEventListener('click', () => مُشغّل_صوت?.نقر.triggerAttackRelease("C2", "8n"));
             });
 
             document.getElementById('review-form').addEventListener('submit', إرسال_المراجعة);
             document.getElementById('service-request-form').addEventListener('submit', إنشاء_رابط_واتساب);
-
             تفعيل_كل_تأثيرات_الميلان();
         }
 
@@ -485,88 +386,52 @@
         function عند_تحريك_الفأرة(حدث) {
             مؤشر_الفأرة.x = (حدث.clientX / window.innerWidth) * 2 - 1;
             مؤشر_الفأرة.y = -(حدث.clientY / window.innerHeight) * 2 + 1;
-            
             gsap.to(نقطة_المؤشر, { duration: 0.1, x: حدث.clientX, y: حدث.clientY });
             gsap.to(حلقة_المؤشر, { duration: 0.3, x: حدث.clientX, y: حدث.clientY });
         }
 
         function معالجة_التمرير() {
-            const عناصر_للكشف = document.querySelectorAll('.reveal-on-scroll');
-            const ارتفاع_النافذة = window.innerHeight;
-            عناصر_للكشف.forEach(عنصر => {
-                const موقع_العنصر = عنصر.getBoundingClientRect().top;
-                if (موقع_العنصر < ارتفاع_النافذة - 100) {
+            document.querySelectorAll('.reveal-on-scroll').forEach(عنصر => {
+                if (عنصر.getBoundingClientRect().top < window.innerHeight - 100) {
                     عنصر.classList.add('is-visible');
                 }
             });
-            
             const نسبة_التمرير = المحتوى_الرئيسي.scrollTop / (المحتوى_الرئيسي.scrollHeight - window.innerHeight);
-            كائنات_ثلاثية_الأبعاد.position.y = -نسبة_التمرير * 30; // تحريك الكائنات مع التمرير
+            كائنات_ثلاثية_الأبعاد.position.y = -نسبة_التمرير * 30;
         }
 
         async function إرسال_المراجعة(حدث) {
             حدث.preventDefault();
-            const نموذج = حدث.target;
-            const زر = نموذج.querySelector('button');
-            const نص_الزر_الأصلي = زر.textContent;
-            زر.textContent = 'جارٍ الإرسال...';
-            زر.disabled = true;
-
-            const بيانات_النموذج = new FormData(نموذج);
-            const بيانات_لإرسالها = new URLSearchParams();
-            for (const زوج of بيانات_النموذج) {
-                بيانات_لإرسالها.append(زوج[0], زوج[1]);
-            }
-            
+            const نموذج = حدث.target, زر = نموذج.querySelector('button'), نص_الزر_الأصلي = زر.textContent;
+            زر.textContent = 'جارٍ الإرسال...'; زر.disabled = true;
             try {
-                await fetch(`${رابط_جوجل_سكريبت}?action=create`, {
-                    method: 'POST',
-                    body: بيانات_لإرسالها
-                });
+                await fetch(`${رابط_جوجل_سكريبت}?action=create`, { method: 'POST', body: new URLSearchParams(new FormData(نموذج)) });
                 مُشغّل_صوت.نجاح.triggerAttackRelease("G5", "8n");
-                نموذج.reset();
-                زر.textContent = 'تم الإرسال بنجاح!';
+                نموذج.reset(); زر.textContent = 'تم الإرسال بنجاح!';
                 await جلب_وعرض_المراجعات();
-            } catch (خطأ) {
-                زر.textContent = 'حدث خطأ!';
-                console.error('فشل في إرسال المراجعة:', خطأ);
-            } finally {
-                setTimeout(() => {
-                    زر.textContent = نص_الزر_الأصلي;
-                    زر.disabled = false;
-                }, 3000);
-            }
+            } catch (خطأ) { زر.textContent = 'حدث خطأ!'; } 
+            finally { setTimeout(() => { زر.textContent = نص_الزر_الأصلي; زر.disabled = false; }, 3000); }
         }
 
         function إنشاء_رابط_واتساب(حدث) {
             حدث.preventDefault();
-            const اسم = document.getElementById('contact-name').value;
-            const خدمة = document.getElementById('contact-service').value;
-            const تفاصيل = document.getElementById('contact-details').value;
-            const رسالة = `مرحباً سيف،\nأنا ${اسم}.\n\nأرغب في طلب خدمة: *${خدمة}*.\n\nالتفاصيل:\n${تفاصيل}`;
-            const رابط = `https://wa.me/966503901416?text=${encodeURIComponent(رسالة)}`; // استبدل بالرقم الصحيح
-            window.open(رابط, '_blank');
+            const رسالة = `مرحباً سيف،\nأنا ${document.getElementById('contact-name').value}.\n\nأرغب في طلب خدمة: *${document.getElementById('contact-service').value}*.\n\nالتفاصيل:\n${document.getElementById('contact-details').value}`;
+            window.open(`https://wa.me/966503901416?text=${encodeURIComponent(رسالة)}`, '_blank');
         }
 
         // --- دورة التحديث الرئيسية ---
         const ساعة = new THREE.Clock();
         function تحريك() {
             requestAnimationFrame(تحريك);
-            
             const الزمن_المنقضي = ساعة.getElapsedTime();
             مجموعة_الخلفية.rotation.y = الزمن_المنقضي * 0.05;
             مجموعة_الخلفية.rotation.x = الزمن_المنقضي * 0.02;
 
-            // تحديث حركة الكائنات ثلاثية الأبعاد
             const مكعب_المهارات = كائنات_ثلاثية_الأبعاد.getObjectByName('مكعب_المهارات');
-            if (مكعب_المهارات) {
-                مكعب_المهارات.rotation.x = الزمن_المنقضي * 0.3;
-                مكعب_المهارات.rotation.y = الزمن_المنقضي * 0.3;
-            }
+            if(مكعب_المهارات) { مكعب_المهارات.rotation.x = الزمن_المنقضي * 0.3; مكعب_المهارات.rotation.y = الزمن_المنقضي * 0.3; }
+            
             const أيقونة_التشغيل = كائنات_ثلاثية_الأبعاد.getObjectByName('أيقونة_التشغيل');
-            if (أيقونة_التشغيل) {
-                أيقونة_التشغيل.rotation.y = -Math.PI / 4 + Math.sin(الزمن_المنقضي * 0.5) * 0.5;
-            }
+            if(أيقونة_التشغيل) { أيقونة_التشغيل.rotation.y = -Math.PI / 4 + Math.sin(الزمن_المنقضي * 0.5) * 0.5; }
 
             كاميرا.position.x += (مؤشر_الفأرة.x * 0.5 - كاميرا.position.x) * 0.05;
             كاميرا.position.y += (-مؤشر_الفأرة.y * 0.5 - كاميرا.position.y) * 0.05;
