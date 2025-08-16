@@ -126,7 +126,7 @@
     </main>
 
     <script type="importmap">
-        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", "gsap": "https://unpkg.com/gsap@3.12.5/index.js", "tone": "https://unpkg.com/tone@14.7.77/build/Tone.js" } }
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", "gsap": "https://unpkg.com/gsap@3.12.5/index.js" } }
     </script>
     <script type="module">
         // --- استيراد الوحدات ---
@@ -135,10 +135,9 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
         import { gsap } from 'gsap';
-        import * as Tone from 'tone';
 
         // --- الإعدادات العامة والمتغيرات ---
-        let مشهد, كاميرا, عارض, مُلحن_المؤثرات, مؤشر_الفأرة, صوت_محيطي, مُشغّل_صوت;
+        let مشهد, كاميرا, عارض, مُلحن_المؤثرات, مؤشر_الفأرة;
         const مجموعة_الخلفية = new THREE.Group();
         const كائنات_ثلاثية_الأبعاد = new THREE.Group();
         const رابط_جوجل_سكريبت = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
@@ -181,7 +180,6 @@
             إعداد_المؤثرات_البصرية();
             إعداد_خلفية_المجرات();
             إعداد_الكائنات_ثلاثية_الأبعاد();
-            إعداد_الأصوات();
             
             عرض_المهارات();
             عرض_معرض_الأعمال();
@@ -255,19 +253,6 @@
             كائنات_ثلاثية_الأبعاد.add(أيقونة_تشغيل);
             
             مشهد.add(كائنات_ثلاثية_الأبعاد);
-        }
-
-        function إعداد_الأصوات() {
-            // -- ✨ الإصلاح --
-            // الوصول للمكونات عبر Tone.default
-            صوت_محيطي = new Tone.default.Noise("pink").toDestination();
-            صوت_محيطي.volume.value = -40;
-
-            مُشغّل_صوت = {
-                تحويم: new Tone.default.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination(),
-                نقر: new Tone.default.MembraneSynth().toDestination(),
-                نجاح: new Tone.default.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination(),
-            };
         }
 
         // --- دوال عرض المحتوى الديناميكي ---
@@ -354,26 +339,6 @@
             window.addEventListener('mousemove', عند_تحريك_الفأرة);
             المحتوى_الرئيسي.addEventListener('scroll', معالجة_التمرير);
 
-            const بدء_الصوت = () => {
-                // -- ✨ الإصلاح --
-                // التحقق من حالة الصوت وبدء تشغيله عبر Tone.default
-                if (Tone.default.context.state !== 'running') {
-                    Tone.default.start().then(() => {
-                        if (صوت_محيطي) صوت_محيطي.start();
-                        console.log("Audio context started successfully.");
-                    });
-                }
-                window.removeEventListener('click', بدء_الصوت);
-                window.removeEventListener('mousemove', بدء_الصوت);
-            };
-            window.addEventListener('click', بدء_الصوت);
-            window.addEventListener('mousemove', بدء_الصوت);
-
-            document.querySelectorAll('a, button, .glass-card, .star-rating label').forEach(عنصر => {
-                عنصر.addEventListener('mouseenter', () => مُشغّل_صوت?.تحويم.triggerAttackRelease("C5", "16n"));
-                عنصر.addEventListener('click', () => مُشغّل_صوت?.نقر.triggerAttackRelease("C2", "8n"));
-            });
-
             document.getElementById('review-form').addEventListener('submit', إرسال_المراجعة);
             document.getElementById('service-request-form').addEventListener('submit', إنشاء_رابط_واتساب);
             تفعيل_كل_تأثيرات_الميلان();
@@ -414,7 +379,6 @@
             زر.textContent = 'جارٍ الإرسال...'; زر.disabled = true;
             try {
                 await fetch(`${رابط_جوجل_سكريبت}?action=create`, { method: 'POST', body: new URLSearchParams(new FormData(نموذج)) });
-                مُشغّل_صوت.نجاح.triggerAttackRelease("G5", "8n");
                 نموذج.reset(); زر.textContent = 'تم الإرسال بنجاح!';
                 await جلب_وعرض_المراجعات();
             } catch (خطأ) { زر.textContent = 'حدث خطأ!'; } 
@@ -449,7 +413,7 @@
         }
 
         // --- بدء التنفيذ ---
-        window.onload = تهيئة;
+        document.addEventListener('DOMContentLoaded', تهيئة);
     </script>
 </body>
 </html>
