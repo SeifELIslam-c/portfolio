@@ -15,155 +15,112 @@
             --glow-color-rgb: 0, 255, 137;
             --bg-color: #010206;
             --text-color: #e0e0e0;
-            --card-bg: rgba(10, 15, 25, 0.6);
+            --card-bg: rgba(10, 15, 25, 0.65);
             --border-color: rgba(0, 255, 137, 0.25);
+            --input-bg: rgba(0, 0, 0, 0.3);
         }
-        /* --- Base & Cursor --- */
+        /* --- الأساسيات والمؤشر --- */
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Tajawal', sans-serif;
-            overflow: hidden;
-            margin: 0;
-            cursor: none;
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: 'Tajawal', sans-serif; overflow: hidden; margin: 0; cursor: none;
         }
-        #cursor-dot {
-            position: fixed; width: 8px; height: 8px; background-color: var(--glow-color);
-            border-radius: 50%; left: 0; top: 0; pointer-events: none;
-            transform: translate(-50%, -50%); z-index: 9999;
-            transition: transform 0.1s ease-out, opacity 0.3s;
-        }
-        #cursor-ring {
-            position: fixed; width: 40px; height: 40px; border: 2px solid var(--glow-color);
-            border-radius: 50%; left: 0; top: 0; pointer-events: none;
-            transform: translate(-50%, -50%); z-index: 9999;
-            transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s;
-        }
-        /* --- Loading Screen --- */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 10000; display: flex;
-            align-items: center; justify-content: center;
-            font-family: 'Roboto Mono', monospace;
-            color: var(--glow-color);
-            transition: opacity 1s ease-out 0.5s;
-        }
+        #cursor-dot, #cursor-ring { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 9999; transition: opacity 0.3s; }
+        #cursor-dot { width: 8px; height: 8px; background-color: var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, opacity 0.3s; }
+        #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s; }
+        /* --- شاشة التحميل --- */
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono', monospace; color: var(--glow-color); transition: opacity 1s ease-out 0.5s; }
         #boot-sequence { width: 350px; }
         #boot-sequence p { margin: 2px 0; white-space: pre; }
         .boot-hidden { opacity: 0; }
-        /* --- Main Layout --- */
+        /* --- الهيكل الرئيسي --- */
         #three-canvas { position: fixed; top: 0; left: 0; outline: none; z-index: 1; }
-        #main-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
-            overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in;
-            scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent;
-        }
+        #main-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in; scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent; }
         #main-content::-webkit-scrollbar { width: 6px; }
         #main-content::-webkit-scrollbar-track { background: transparent; }
         #main-content::-webkit-scrollbar-thumb { background-color: var(--glow-color); border-radius: 6px; }
-        .content-section { padding: 8rem 1rem; max-width: 1100px; margin: 0 auto; position: relative; }
-        /* --- Glassmorphism & Cards --- */
-        .glass-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px; transition: all 0.4s ease;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(var(--glow-color-rgb), 0.1);
-            transform-style: preserve-3d;
-        }
-        .glass-card:hover {
-            border-color: rgba(var(--glow-color-rgb), 0.7);
-            box-shadow: 0 0 35px rgba(var(--glow-color-rgb), 0.2), inset 0 0 25px rgba(var(--glow-color-rgb), 0.2);
-        }
-        /* --- Typography --- */
+        .content-section { padding: 8rem 1rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+        .header-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        /* --- البطاقات الزجاجية --- */
+        .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 24px; transition: all 0.4s ease; box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(var(--glow-color-rgb), 0.1); transform-style: preserve-3d; }
+        .glass-card:hover { transform: translateY(-8px) scale(1.02); border-color: rgba(var(--glow-color-rgb), 0.7); box-shadow: 0 0 35px rgba(var(--glow-color-rgb), 0.2), inset 0 0 25px rgba(var(--glow-color-rgb), 0.2); }
+        /* --- الخطوط وعناصر الواجهة --- */
         .font-display { font-family: 'Changa', sans-serif; font-weight: 700; }
-        .text-glow { color: var(--glow-color); text-shadow: 0 0 4px rgba(var(--glow-color-rgb), 0.7), 0 0 12px rgba(var(--glow-color-rgb), 0.5); }
-        /* --- Skill Section --- */
-        .skill-card { padding: 1.5rem; }
-        .skill-icon-wrapper {
-            width: 80px; height: 80px; background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-            border-radius: 22px; display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1rem; transition: all 0.3s ease;
-        }
-        .skill-icon { width: 48px; height: 48px; color: var(--glow-color); transition: all 0.3s ease; }
-        /* --- Portfolio Section --- */
-        .video-placeholder {
-            background: #000; width: 100%; padding-top: 56.25%; position: relative;
-            border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color);
-        }
-        .video-placeholder::before {
-            content: '►'; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); font-size: 5rem; color: rgba(var(--glow-color-rgb), 0.5);
-            text-shadow: 0 0 15px var(--glow-color); transition: all 0.3s ease;
-        }
-        .glass-card:hover .video-placeholder::before { color: #fff; transform: translate(-50%, -50%) scale(1.2); }
-        /* --- Reveal Animation --- */
+        .text-glow { color: var(--glow-color); text-shadow: 0 0 4px rgba(var(--glow-color-rgb), 0.7), 0 0 12px rgba(var(--glow-color-rgb), 0.5), 0 0 24px rgba(var(--glow-color-rgb), 0.3); }
+        .form-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 12px; padding: 0.75rem 1rem; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--glow-color); box-shadow: 0 0 15px rgba(var(--glow-color-rgb), 0.5); }
+        .cyber-button { position: relative; background: transparent; border: 2px solid var(--glow-color); color: var(--glow-color); border-radius: 12px; padding: 0.75rem 1.5rem; transition: all 0.4s; overflow: hidden; font-family: 'Changa', sans-serif; text-shadow: 0 0 5px var(--glow-color); }
+        .cyber-button:hover { color: #010206; background: var(--glow-color); box-shadow: 0 0 25px var(--glow-color); }
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+        .star-rating input { display: none; }
+        .star-rating label { font-size: 2rem; color: #444; cursor: none; transition: color 0.2s; }
+        .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--glow-color); text-shadow: 0 0 10px var(--glow-color); }
+        /* --- حركة الظهور عند التمرير --- */
         .reveal-on-scroll { opacity: 0; transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
-    <!-- Cursors -->
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
-    <!-- Loading Screen -->
     <div id="loading-screen">
         <div id="boot-sequence">
-            <p class="boot-hidden">> SEIF OS v9.0 Initializing...</p>
-            <p class="boot-hidden">> Mounting file systems... [OK]</p>
-            <p class="boot-hidden">> Starting render core... [OK]</p>
-            <p class="boot-hidden">> Compiling shaders... [OK]</p>
-            <p class="boot-hidden">> Establishing quantum link...</p>
-            <p class="boot-hidden">> Connection established. Welcome.</p>
+            <p class="boot-hidden">> SEIF OS v12.0 جاري التشغيل...</p>
+            <p class="boot-hidden">> تحميل أنظمة الملفات... [تم]</p>
+            <p class="boot-hidden">> بدء النواة الرسومية... [تم]</p>
+            <p class="boot-hidden">> ترجمة المظللات... [تم]</p>
+            <p class="boot-hidden">> إنشاء اتصال كمومي...</p>
+            <p class="boot-hidden">> تم الاتصال بنجاح. أهلاً بك.</p>
         </div>
     </div>
 
-    <!-- 3D Canvas -->
     <canvas id="three-canvas"></canvas>
-    
-    <!-- Main Content -->
+
     <main id="main-content">
-        <header class="min-h-screen flex items-center justify-center text-center px-4 content-section">
-            <!-- 3D Text will be placed here by Three.js -->
+        <header class="header-section content-section">
+            <div id="header-text-container" class="text-center">
+                 <h1 class="font-display text-6xl md:text-8xl lg:text-9xl text-glow" id="main-title" style="opacity: 0;">سيف الإسلام</h1>
+                 <p class="mt-4 text-xl md:text-3xl font-light tracking-wider" id="subtitle" style="opacity: 0;">مهندس برمجيات ومبدع مونتاج</p>
+            </div>
         </header>
+
         <section id="about" class="content-section">
-            <div class="glass-card p-8 md:p-12 text-center reveal-on-scroll" data-tilt-max="8">
+            <div class="glass-card p-8 md:p-12 text-center reveal-on-scroll" data-tilt>
                 <h2 class="font-display text-4xl md:text-5xl text-glow mb-6">الرؤية المزدوجة</h2>
-                <p class="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-                    أعيش في عالمين: عالم الشيفرة الدقيقة وعالم السرد البصري. كمهندس برمجيات، أبني حلولاً تقنية قوية. وكمبدع مونتاج، أصنع قصصاً مؤثرة. هذا المزيج الفريد يمكنني من تحويل أي فكرة إلى تجربة رقمية متكاملة وجذابة.
-                </p>
+                <p class="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">أعيش في عالمين: عالم الشيفرة الدقيقة وعالم السرد البصري. كمهندس برمجيات، أبني حلولاً تقنية قوية. وكمبدع مونتاج، أصنع قصصاً مؤثرة. هذا المزيج الفريد يمكنني من تحويل أي فكرة إلى تجربة رقمية متكاملة وجذابة.</p>
             </div>
         </section>
+
         <section id="skills" class="content-section">
             <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">ترسانة المهارات</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 100ms;" data-tilt-max="12">
-                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M12 6v.01M12 12v.01M12 18v.01"></path></svg></div>
-                    <h3 class="font-display text-xl text-white text-center">تطوير الويب</h3>
+            <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 </div>
-                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 200ms;" data-tilt-max="12">
-                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div>
-                    <h3 class="font-display text-xl text-white text-center">تطوير الجوال</h3>
-                </div>
-                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 300ms;" data-tilt-max="12">
-                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
-                    <h3 class="font-display text-xl text-white text-center">برامج سطح المكتب</h3>
-                </div>
-                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 400ms;" data-tilt-max="12">
-                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg></div>
-                    <h3 class="font-display text-xl text-white text-center">مونتاج إبداعي</h3>
-                </div>
-            </div>
         </section>
+
         <section id="portfolio" class="content-section">
-            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">معرض أعمال المونتاج</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 100ms;" data-tilt-max="6"><div class="video-placeholder"></div></div>
-                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 200ms;" data-tilt-max="6"><div class="video-placeholder"></div></div>
-                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 300ms;" data-tilt-max="6"><div class="video-placeholder"></div></div>
-                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 400ms;" data-tilt-max="6"><div class="video-placeholder"></div></div>
+            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">معرض الأعمال</h2>
+            <div id="portfolio-grid" class="space-y-16">
+                </div>
+        </section>
+
+        <section id="reviews" class="content-section">
+            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">آراء العملاء</h2>
+            <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"></div>
+            <div class="glass-card p-8 reveal-on-scroll" data-tilt>
+                <h3 class="font-display text-3xl text-glow mb-6 text-center">أضف شهادتك</h3>
+                <form id="review-form" class="space-y-6">
+                     </form>
             </div>
         </section>
+        
+        <section id="contact" class="content-section">
+            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">تواصل معي</h2>
+            <div class="glass-card p-8 reveal-on-scroll" data-tilt>
+                <form id="service-request-form" class="space-y-6">
+                     </form>
+            </div>
+        </section>
+
         <footer class="text-center py-8 mt-12 text-gray-500">
             <p>&copy; 2025 سيف الإسلام. تم التصميم والبرمجة بحب وشغف.</p>
         </footer>
@@ -173,218 +130,453 @@
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", "gsap": "https://unpkg.com/gsap@3.12.5/index.js", "tone": "https://unpkg.com/tone@14.7.77/build/Tone.js" } }
     </script>
     <script type="module">
-        // --- IMPORTS ---
+        // --- استيراد الوحدات ---
         import * as THREE from 'three';
-        import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-        import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
-        import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader.js';
         import { gsap } from 'gsap';
-        import * as Tone from 'tone';
+        import * as Tone from 'tone'; // <-- هذا هو الإصلاح الرئيسي
 
-        // --- GLOBAL STATE ---
-        let scene, camera, renderer, composer, mouse, ambientSound;
-        let backgroundGroup = new THREE.Group();
-        let introCrystal, crystalParticles;
-        const FONT_URL = 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/fonts/helvetiker_bold.typeface.json';
+        // --- الإعدادات العامة والمتغيرات ---
+        let مشهد, كاميرا, عارض, مُلحن_المؤثرات, مؤشر_الفأرة, صوت_محيطي, مُشغّل_صوت;
+        const مجموعة_الخلفية = new THREE.Group();
+        const كائنات_ثلاثية_الأبعاد = new THREE.Group();
+        const رابط_جوجل_سكريبت = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
         
-        // --- DOM ELEMENTS ---
-        const loadingScreen = document.getElementById('loading-screen');
-        const mainContent = document.getElementById('main-content');
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorRing = document.getElementById('cursor-ring');
+        // --- عناصر الواجهة الرسومية (DOM) ---
+        const شاشة_التحميل = document.getElementById('loading-screen');
+        const المحتوى_الرئيسي = document.getElementById('main-content');
+        const نقطة_المؤشر = document.getElementById('cursor-dot');
+        const حلقة_المؤشر = document.getElementById('cursor-ring');
+        const العنوان_الرئيسي = document.getElementById('main-title');
+        const العنوان_الفرعي = document.getElementById('subtitle');
 
-        // --- INITIALIZATION ---
-        function init() {
-            setupScene();
-            setupPostProcessing();
-            createBackground();
-            createIntroCrystal();
-            setupEventListeners();
-            bootAnimation();
-            animate();
-            console.log("Made with ❤️ by Seif El Islam & Gemini. Check out this Easter Egg!");
+        // --- البيانات ---
+        const بيانات_المهارات = [
+            { name: 'تطوير الويب', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M12 6v.01M12 12v.01M12 18v.01"></path>` },
+            { name: 'تطوير الجوال', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>` },
+            { name: 'برامج سطح المكتب', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>` },
+            { name: 'مونتاج إبداعي', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>` }
+        ];
+
+        const بيانات_معرض_الأعمال = [
+            { type: 'video', title: 'عينة الفيديو 1', url: 'https://www.youtube.com/embed/KeBKMOAs_a8' },
+            { type: 'video', title: 'عينة الفيديو 2', url: 'https://www.youtube.com/embed/1wgL00xdLrU' },
+            { type: 'video', title: 'عينة الفيديو 3', url: 'https://www.youtube.com/embed/Ego8GVwLw_o' },
+            { type: 'video', title: 'عينة الفيديو 4', url: 'https://www.youtube.com/embed/MIwTS0pxr28' },
+            { type: 'image', title: 'ملفات الصور', images: [
+                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752048960/%D8%B9%D8%B7%D9%88%D8%B1_%D8%A7%D9%84%D8%B4%D8%B1%D9%82_%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7_%D9%84%D9%88%D8%AC%D9%88_zie0b1.jpg', alt: 'تصميم عطور' },
+                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049216/Logo_halwa_al_qodes_2_jd6nyb.jpg', alt: 'تصميم حلوى' },
+                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752168394/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%A3%D9%88%D9%84_2_dkx2wl.jpg', alt: 'تصميم دليل الرياض' },
+                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752167786/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84_ddjrb7.jpg', alt: 'تصميم دليل الرياض' },
+                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049317/1752033860076_si3ycq.png', alt: 'تصميم دراجات' }
+            ]},
+            { type: 'video', title: 'إعلانات UGC إبداعية', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ai_masri_good_hrvboy' },
+            { type: 'video', title: 'إعلان عيادة تجميل', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ayon_al_amira_w19lmf' }
+        ];
+
+        // --- الدوال الرئيسية ---
+        function تهيئة() {
+            إعداد_المشهد();
+            إعداد_المؤثرات_البصرية();
+            إعداد_خلفية_المجرات();
+            إعداد_الكائنات_ثلاثية_الأبعاد();
+            
+            تهيئة_حركة_التمهيد();
+            عرض_المهارات();
+            عرض_معرض_الأعمال();
+            عرض_نموذج_المراجعة();
+            عرض_نموذج_التواصل();
+            جلب_وعرض_المراجعات();
+
+            إضافة_معالجات_الأحداث();
+            تحريك();
         }
 
-        // --- SETUP FUNCTIONS ---
-        function setupScene() {
-            mouse = new THREE.Vector2();
-            scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x010206, 10, 40);
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 10;
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        // --- دوال الإعداد ---
+        function إعداد_المشهد() {
+            مشهد = new THREE.Scene();
+            مؤشر_الفأرة = new THREE.Vector2();
+            
+            const نسبة_العرض_إلى_الارتفاع = window.innerWidth / window.innerHeight;
+            كاميرا = new THREE.PerspectiveCamera(75, نسبة_العرض_إلى_الارتفاع, 0.1, 1000);
+            كاميرا.position.z = 5;
+            
+            عارض = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
+            عارض.setSize(window.innerWidth, window.innerHeight);
+            عارض.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            عارض.setClearColor(0x010206, 1);
         }
 
-        function setupPostProcessing() {
-            const renderScene = new RenderPass(scene, camera);
-            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.0, 0.5, 0.1);
-            const rgbShiftPass = new ShaderPass(RGBShiftShader);
-            rgbShiftPass.uniforms['amount'].value = 0.0015;
-            composer = new EffectComposer(renderer);
-            composer.addPass(renderScene);
-            composer.addPass(bloomPass);
-            composer.addPass(rgbShiftPass);
+        function إعداد_المؤثرات_البصرية() {
+            const ممر_العرض = new RenderPass(مشهد, كاميرا);
+            const ممر_التوهج = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
+            
+            مُلحن_المؤثرات = new EffectComposer(عارض);
+            مُلحن_المؤثرات.addPass(ممر_العرض);
+            مُلحن_المؤثرات.addPass(ممر_التوهج);
         }
 
-        function createBackground() {
-            // Animated Grid
-            const gridHelper = new THREE.GridHelper(200, 50, 0x00ff89, 0x00ff89);
-            gridHelper.material.opacity = 0.1;
-            gridHelper.material.transparent = true;
-            gridHelper.position.y = -10;
-            backgroundGroup.add(gridHelper);
-
-            // Nebula Particles
-            const nebulaMaterial = new THREE.PointsMaterial({
-                color: 0x00ff89, size: 0.05, blending: THREE.AdditiveBlending,
-                transparent: true, opacity: 0.4, sizeAttenuation: true
-            });
-            const nebulaGeometry = new THREE.BufferGeometry();
-            const positions = [];
-            for (let i = 0; i < 10000; i++) {
-                positions.push((Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80);
+        function إعداد_خلفية_المجرات() {
+            const عدد_الجسيمات = 5000;
+            const مواقع = new Float32Array(عدد_الجسيمات * 3);
+            for (let i = 0; i < عدد_الجسيمات; i++) {
+                مواقع[i * 3 + 0] = (Math.random() - 0.5) * 20;
+                مواقع[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                مواقع[i * 3 + 2] = (Math.random() - 0.5) * 20;
             }
-            nebulaGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            backgroundGroup.add(new THREE.Points(nebulaGeometry, nebulaMaterial));
-            scene.add(backgroundGroup);
-        }
-
-        function createIntroCrystal() {
-            const crystalGeometry = new THREE.IcosahedronGeometry(2.5, 1);
-            const crystalMaterial = new THREE.MeshPhysicalMaterial({
-                roughness: 0.1, transmission: 1, thickness: 1.5,
-                color: 0x00ff89, wireframe: true
+            const هندسة_الجسيمات = new THREE.BufferGeometry();
+            هندسة_الجسيمات.setAttribute('position', new THREE.BufferAttribute(مواقع, 3));
+            
+            const مادة_الجسيمات = new THREE.PointsMaterial({
+                color: 0x00ff89,
+                size: 0.02,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
             });
-            introCrystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
-            scene.add(introCrystal);
+            const جسيمات = new THREE.Points(هندسة_الجسيمات, مادة_الجسيمات);
+            مجموعة_الخلفية.add(جسيمات);
+            مشهد.add(مجموعة_الخلفية);
+        }
+        
+        function إعداد_الكائنات_ثلاثية_الأبعاد() {
+            // كائن لقسم المهارات - مكعب برمجي
+            const هندسة_المكعب = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+            const هندسة_الإطار = new THREE.WireframeGeometry(هندسة_المكعب);
+            const مادة_الإطار = new THREE.LineBasicMaterial({
+                color: 0x00ff89,
+                linewidth: 2,
+                transparent: true,
+                opacity: 0.5
+            });
+            const مكعب_مهارات = new THREE.LineSegments(هندسة_الإطار, مادة_الإطار);
+            مكعب_مهارات.position.set(-3, 8, -2);
+            مكعب_مهارات.name = 'مكعب_المهارات';
+            كائنات_ثلاثية_الأبعاد.add(مكعب_مهارات);
+
+            // كائن لقسم معرض الأعمال - أيقونة تشغيل
+            const شكل_التشغيل = new THREE.Shape();
+            شكل_التشغيل.moveTo(0, 0.6);
+            شكل_التشغيل.lineTo(0, -0.6);
+            شكل_التشغيل.lineTo(1, 0);
+            شكل_التشغيل.lineTo(0, 0.6);
+            const هندسة_التشغيل = new THREE.ShapeGeometry(شكل_التشغيل);
+            const مادة_التشغيل = new THREE.MeshBasicMaterial({
+                color: 0x9400ff,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.7
+            });
+            const أيقونة_تشغيل = new THREE.Mesh(هندسة_التشغيل, مادة_التشغيل);
+            أيقونة_تشغيل.position.set(3, 22, -3);
+            أيقونة_تشغيل.rotation.y = -Math.PI / 4;
+            أيقونة_تشغيل.name = 'أيقونة_التشغيل';
+            كائنات_ثلاثية_الأبعاد.add(أيقونة_تشغيل);
+            
+            مشهد.add(كائنات_ثلاثية_الأبعاد);
         }
 
-        function bootAnimation() {
+        function إعداد_الأصوات() {
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+            صوت_محيطي = new Tone.Noise("pink").toDestination().start();
+            صوت_محيطي.volume.value = -40;
+
+            مُشغّل_صوت = {
+                تحويم: new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination(),
+                نقر: new Tone.MembraneSynth().toDestination(),
+                نجاح: new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination(),
+            };
+        }
+
+        // --- دوال عرض المحتوى الديناميكي ---
+        function عرض_المهارات() {
+            const حاوية = document.getElementById('skills-grid');
+            بيانات_المهارات.forEach((مهارة, فهرس) => {
+                const بطاقة = `
+                    <div class="glass-card p-6 text-center flex flex-col items-center justify-center reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;">
+                        <svg class="w-16 h-16 mb-4" style="color: var(--glow-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${مهارة.icon}</svg>
+                        <h3 class="font-display text-xl">${مهارة.name}</h3>
+                    </div>
+                `;
+                حاوية.innerHTML += بطاقة;
+            });
+        }
+        
+        function عرض_معرض_الأعمال() {
+            const حاوية = document.getElementById('portfolio-grid');
+            بيانات_معرض_الأعمال.forEach((عمل, فهرس) => {
+                let محتوى_البطاقة = '';
+                if (عمل.type === 'video') {
+                    محتوى_البطاقة = `
+                        <h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3>
+                        <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border-2 border-transparent hover:border-green-400 transition-all duration-300">
+                           <iframe src="${عمل.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>
+                        </div>`;
+                } else if (عمل.type === 'image') {
+                    const صور_html = عمل.images.map(صورة => `<img src="${صورة.url}" alt="${صورة.alt}" class="w-full h-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300">`).join('');
+                    محتوى_البطاقة = `
+                        <h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${صور_html}
+                        </div>`;
+                }
+
+                const عنصر = `
+                    <div class="glass-card p-8 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 150}ms;">
+                        ${محتوى_البطاقة}
+                    </div>`;
+                حاوية.innerHTML += عنصر;
+            });
+        }
+        
+        function عرض_نموذج_المراجعة() {
+             document.getElementById('review-form').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" name="name" placeholder="الاسم" required class="form-input">
+                    <input type="text" name="project" placeholder="نوع المشروع" required class="form-input">
+                </div>
+                <textarea name="review" placeholder="شهادتك..." required class="form-input w-full" rows="4"></textarea>
+                <div class="flex flex-col items-center">
+                     <p class="mb-2">تقييمك:</p>
+                     <div class="star-rating">
+                        <input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label>
+                        <input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label>
+                        <input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label>
+                        <input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label>
+                        <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label>
+                    </div>
+                </div>
+                <button type="submit" class="cyber-button w-full mt-4">إرسال الشهادة</button>
+            `;
+        }
+
+        function عرض_نموذج_التواصل() {
+            document.getElementById('service-request-form').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" id="contact-name" name="name" placeholder="الاسم الكامل" required class="form-input">
+                    <input type="email" id="contact-email" name="email" placeholder="البريد الإلكتروني" required class="form-input">
+                </div>
+                <select id="contact-service" name="service" class="form-input w-full">
+                    <option>اختر نوع الخدمة</option>
+                    <option value="تطوير ويب">تطوير ويب</option>
+                    <option value="تطوير جوال">تطوير جوال</option>
+                    <option value="مونتاج فيديو">مونتاج فيديو</option>
+                    <option value="تصميم جرافيك">تصميم جرافيك</option>
+                    <option value="استشارة">استشارة</option>
+                </select>
+                <textarea id="contact-details" name="details" placeholder="تفاصيل المشروع..." required class="form-input w-full" rows="5"></textarea>
+                <button type="submit" class="cyber-button w-full">إرسال الطلب عبر واتساب</button>
+            `;
+        }
+
+        // --- الحركات والتفاعلات ---
+        function تهيئة_حركة_التمهيد() {
             const bootLines = document.querySelectorAll('#boot-sequence p');
-            const tl = gsap.timeline();
-            bootLines.forEach((line, index) => {
-                tl.to(line, { opacity: 1, duration: 0.05, delay: index * 0.2 });
+            let delay = 0;
+            bootLines.forEach(line => {
+                setTimeout(() => line.classList.remove('boot-hidden'), delay);
+                delay += Math.random() * 250 + 50;
             });
-            tl.to(loadingScreen, {
-                opacity: 0,
-                duration: 1,
-                delay: 0.5,
-                onComplete: () => {
-                    loadingScreen.style.display = 'none';
-                    document.body.addEventListener('click', startExperience, { once: true });
+            setTimeout(بدء_التجربة, delay + 1000);
+        }
+
+        function بدء_التجربة() {
+            إعداد_الأصوات();
+            شاشة_التحميل.style.opacity = '0';
+            شاشة_التحميل.addEventListener('transitionend', () => شاشة_التحميل.style.display = 'none');
+            
+            المحتوى_الرئيسي.style.opacity = '1';
+            المحتوى_الرئيسي.style.pointerEvents = 'auto';
+
+            gsap.timeline()
+                .fromTo(العنوان_الرئيسي, { opacity: 0, y: 50, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: 'power3.out' })
+                .fromTo(العنوان_الفرعي, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, "-=1");
+        }
+
+        function تطبيق_تأثير_الميلان(عنصر) {
+            let إطار_الحركة;
+            عنصر.addEventListener('mousemove', (حدث) => {
+                if (إطار_الحركة) cancelAnimationFrame(إطار_الحركة);
+                إطار_الحركة = requestAnimationFrame(() => {
+                    const حدود = عنصر.getBoundingClientRect();
+                    const س = حدث.clientX - حدود.left;
+                    const ص = حدث.clientY - حدود.top;
+                    const نسبة_س = (س / حدود.width - 0.5) * 2;
+                    const نسبة_ص = (ص / حدود.height - 0.5) * 2;
+                    const قوة_الميلان = 8;
+                    
+                    gsap.to(عنصر, {
+                        duration: 0.5,
+                        rotationY: قوة_الميلان * نسبة_س,
+                        rotationX: -قوة_الميلان * نسبة_ص,
+                        ease: 'power1.out'
+                    });
+                });
+            });
+            عنصر.addEventListener('mouseleave', () => {
+                gsap.to(عنصر, {
+                    duration: 0.8,
+                    rotationY: 0,
+                    rotationX: 0,
+                    ease: 'elastic.out(1, 0.3)'
+                });
+            });
+        }
+        
+        // --- معالجة البيانات ---
+        async function جلب_وعرض_المراجعات() {
+            try {
+                const استجابة = await fetch(`${رابط_جوجل_سكريبت}?action=read`);
+                const بيانات = await استجابة.json();
+                const حاوية = document.getElementById('reviews-list');
+                حاوية.innerHTML = ''; // تفريغ الحاوية قبل الإضافة
+                بيانات.forEach((مراجعة, فهرس) => {
+                    if (!مراجعة.name || !مراجعة.review) return;
+                    let نجوم = '★'.repeat(مراجعة.rating || 5) + '☆'.repeat(5 - (مراجعة.rating || 5));
+                    const بطاقة = `
+                        <div class="glass-card p-6 reveal-on-scroll" data-tilt style="transition-delay: ${fهرس * 100}ms;">
+                            <p class="text-xl font-bold mb-2">${مراجعة.name}</p>
+                            <p class="text-sm text-gray-400 mb-3">${مراجعة.project}</p>
+                            <p class="mb-4">"${مراجعة.review}"</p>
+                            <div class="text-yellow-400 text-xl">${نجوم}</div>
+                        </div>`;
+                    حاوية.innerHTML += بطاقة;
+                });
+                تفعيل_كل_تأثيرات_الميلان();
+            } catch (خطأ) {
+                console.error('فشل في جلب المراجعات:', خطأ);
+            }
+        }
+        
+        // --- معالجات الأحداث ---
+        function إضافة_معالجات_الأحداث() {
+            window.addEventListener('resize', عند_تغيير_حجم_النافذة);
+            window.addEventListener('mousemove', عند_تحريك_الفأرة);
+            المحتوى_الرئيسي.addEventListener('scroll', معالجة_التمرير);
+
+            // إضافة صوت التحويم والنقر للعناصر التفاعلية
+            document.querySelectorAll('a, button, .glass-card, .star-rating label').forEach(عنصر => {
+                عنصر.addEventListener('mouseenter', () => مُشغّل_صوت.تحويم.triggerAttackRelease("C5", "16n"));
+                عنصر.addEventListener('click', () => مُشغّل_صوت.نقر.triggerAttackRelease("C2", "8n"));
+            });
+
+            document.getElementById('review-form').addEventListener('submit', إرسال_المراجعة);
+            document.getElementById('service-request-form').addEventListener('submit', إنشاء_رابط_واتساب);
+
+            تفعيل_كل_تأثيرات_الميلان();
+        }
+
+        function تفعيل_كل_تأثيرات_الميلان() {
+            document.querySelectorAll('[data-tilt]').forEach(تطبيق_تأثير_الميلان);
+        }
+
+        function عند_تغيير_حجم_النافذة() {
+            كاميرا.aspect = window.innerWidth / window.innerHeight;
+            كاميرا.updateProjectionMatrix();
+            عارض.setSize(window.innerWidth, window.innerHeight);
+            مُلحن_المؤثرات.setSize(window.innerWidth, window.innerHeight);
+            عارض.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
+
+        function عند_تحريك_الفأرة(حدث) {
+            مؤشر_الفأرة.x = (حدث.clientX / window.innerWidth) * 2 - 1;
+            مؤشر_الفأرة.y = -(حدث.clientY / window.innerHeight) * 2 + 1;
+            
+            gsap.to(نقطة_المؤشر, { duration: 0.1, x: حدث.clientX, y: حدث.clientY });
+            gsap.to(حلقة_المؤشر, { duration: 0.3, x: حدث.clientX, y: حدث.clientY });
+        }
+
+        function معالجة_التمرير() {
+            const عناصر_للكشف = document.querySelectorAll('.reveal-on-scroll');
+            const ارتفاع_النافذة = window.innerHeight;
+            عناصر_للكشف.forEach(عنصر => {
+                const موقع_العنصر = عنصر.getBoundingClientRect().top;
+                if (موقع_العنصر < ارتفاع_النافذة - 100) {
+                    عنصر.classList.add('is-visible');
                 }
             });
+            
+            const نسبة_التمرير = المحتوى_الرئيسي.scrollTop / (المحتوى_الرئيسي.scrollHeight - window.innerHeight);
+            كائنات_ثلاثية_الأبعاد.position.y = -نسبة_التمرير * 30; // تحريك الكائنات مع التمرير
         }
 
-        // --- EVENT LISTENERS & HANDLERS ---
-        function setupEventListeners() {
-            window.addEventListener('resize', onWindowResize);
-            mainContent.addEventListener('scroll', onScroll);
-            window.addEventListener('mousemove', onMouseMove);
-            
-            const scrollObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => scrollObserver.observe(el));
-            
-            document.querySelectorAll('.glass-card').forEach(card => {
-                card.addEventListener('mousemove', onCardMouseMove);
-                card.addEventListener('mouseleave', onCardMouseLeave);
-            });
-        }
-        
-        async function startExperience() {
-            await Tone.start();
-            ambientSound = new Tone.Noise("pink").start();
-            const filter = new Tone.AutoFilter("4n").toDestination().start();
-            const reverb = new Tone.Reverb({ decay: 10, wet: 0.5 }).toDestination();
-            ambientSound.connect(filter).connect(reverb);
-            filter.baseFrequency = 100;
-            filter.octaves = 4;
-            
-            const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-            synth.triggerAttackRelease(["C4", "E4", "G4"], "4n");
+        async function إرسال_المراجعة(حدث) {
+            حدث.preventDefault();
+            const نموذج = حدث.target;
+            const زر = نموذج.querySelector('button');
+            const نص_الزر_الأصلي = زر.textContent;
+            زر.textContent = 'جارٍ الإرسال...';
+            زر.disabled = true;
 
-            // Shatter Crystal Animation
-            const particlesCount = 5000;
-            const particlePositions = new Float32Array(particlesCount * 3);
-            const particleMaterial = new THREE.PointsMaterial({
-                color: 0x00ff89, size: 0.05, blending: THREE.AdditiveBlending, transparent: true
-            });
-            for (let i = 0; i < particlesCount; i++) {
-                particlePositions[i * 3] = introCrystal.position.x;
-                particlePositions[i * 3 + 1] = introCrystal.position.y;
-                particlePositions[i * 3 + 2] = introCrystal.position.z;
+            const بيانات_النموذج = new FormData(نموذج);
+            const بيانات_لإرسالها = new URLSearchParams();
+            for (const زوج of بيانات_النموذج) {
+                بيانات_لإرسالها.append(زوج[0], زوج[1]);
             }
-            const particleGeometry = new THREE.BufferGeometry();
-            particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particlePositions, 3));
-            crystalParticles = new THREE.Points(particleGeometry, particleMaterial);
-            scene.add(crystalParticles);
-            scene.remove(introCrystal);
-
-            const tl = gsap.timeline({ onComplete: () => { scene.remove(crystalParticles); load3DText(); } });
-            tl.to(camera.position, { z: 25, duration: 2, ease: 'power2.inOut' });
-            tl.to(particlePositions, {
-                duration: 2.5,
-                ease: 'power3.out',
-                modifiers: {
-                    x: (value, target, targets, index) => (Math.random() - 0.5) * 50,
-                    y: (value, target, targets, index) => (Math.random() - 0.5) * 50,
-                    z: (value, target, targets, index) => (Math.random() - 0.5) * 50,
-                },
-                onUpdate: () => { particleGeometry.attributes.position.needsUpdate = true; }
-            }, "-=2.5");
-            tl.to(particleMaterial, { opacity: 0, duration: 1.5 }, "-=1.5");
             
-            gsap.to(mainContent, { opacity: 1, duration: 1, delay: 1, onStart: () => { mainContent.style.pointerEvents = 'auto'; } });
-        }
-
-        function load3DText() {
-            const fontLoader = new FontLoader();
-            fontLoader.load(FONT_URL, (font) => {
-                const textGeometry = new TextGeometry('سيف الإسلام', {
-                    font: font, size: 1.5, height: 0.2,
-                    curveSegments: 12, bevelEnabled: true,
-                    bevelThickness: 0.03, bevelSize: 0.02, bevelOffset: 0, bevelSegments: 5
+            try {
+                await fetch(`${رابط_جوجل_سكريبت}?action=create`, {
+                    method: 'POST',
+                    body: بيانات_لإرسالها
                 });
-                textGeometry.center();
-                const textMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff89, emissive: 0x00ff89, emissiveIntensity: 0.5 });
-                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-                textMesh.position.z = -5;
-                scene.add(textMesh);
-                
-                const pointLight = new THREE.PointLight(0xffffff, 1);
-                pointLight.position.set(0, 5, 10);
-                scene.add(pointLight);
-            });
-        }
-
-        function onWindowResize() { /* ... same as before ... */ }
-        function onScroll() { /* ... same as before ... */ }
-        function onMouseMove(e) { /* ... same as before ... */ }
-        function onCardMouseMove(e) { /* ... same as before ... */ }
-        function onCardMouseLeave(e) { /* ... same as before ... */ }
-
-        // --- ANIMATION LOOP ---
-        const clock = new THREE.Clock();
-        function animate() {
-            const elapsedTime = clock.getElapsedTime();
-            if (introCrystal && introCrystal.parent) {
-                introCrystal.rotation.y = elapsedTime * 0.3;
+                مُشغّل_صوت.نجاح.triggerAttackRelease("G5", "8n");
+                نموذج.reset();
+                زر.textContent = 'تم الإرسال بنجاح!';
+                await جلب_وعرض_المراجعات();
+            } catch (خطأ) {
+                زر.textContent = 'حدث خطأ!';
+                console.error('فشل في إرسال المراجعة:', خطأ);
+            } finally {
+                setTimeout(() => {
+                    زر.textContent = نص_الزر_الأصلي;
+                    زر.disabled = false;
+                }, 3000);
             }
-            backgroundGroup.rotation.y = elapsedTime * 0.02;
-            backgroundGroup.position.x += (mouse.x * 2 - backgroundGroup.position.x) * 0.02;
-            composer.render();
-            requestAnimationFrame(animate);
         }
 
-        init();
+        function إنشاء_رابط_واتساب(حدث) {
+            حدث.preventDefault();
+            const اسم = document.getElementById('contact-name').value;
+            const خدمة = document.getElementById('contact-service').value;
+            const تفاصيل = document.getElementById('contact-details').value;
+            const رسالة = `مرحباً سيف،\nأنا ${اسم}.\n\nأرغب في طلب خدمة: *${خدمة}*.\n\nالتفاصيل:\n${تفاصيل}`;
+            const رابط = `https://wa.me/966503901416?text=${encodeURIComponent(رسالة)}`; // استبدل بالرقم الصحيح
+            window.open(رابط, '_blank');
+        }
+
+        // --- دورة التحديث الرئيسية ---
+        const ساعة = new THREE.Clock();
+        function تحريك() {
+            requestAnimationFrame(تحريك);
+            
+            const الزمن_المنقضي = ساعة.getElapsedTime();
+            مجموعة_الخلفية.rotation.y = الزمن_المنقضي * 0.05;
+            مجموعة_الخلفية.rotation.x = الزمن_المنقضي * 0.02;
+
+            // تحديث حركة الكائنات ثلاثية الأبعاد
+            const مكعب_المهارات = كائنات_ثلاثية_الأبعاد.getObjectByName('مكعب_المهارات');
+            if (مكعب_المهارات) {
+                مكعب_المهارات.rotation.x = الزمن_المنقضي * 0.3;
+                مكعب_المهارات.rotation.y = الزمن_المنقضي * 0.3;
+            }
+            const أيقونة_التشغيل = كائنات_ثلاثية_الأبعاد.getObjectByName('أيقونة_التشغيل');
+            if (أيقونة_التشغيل) {
+                أيقونة_التشغيل.rotation.y = -Math.PI / 4 + Math.sin(الزمن_المنقضي * 0.5) * 0.5;
+            }
+
+            كاميرا.position.x += (مؤشر_الفأرة.x * 0.5 - كاميرا.position.x) * 0.05;
+            كاميرا.position.y += (-مؤشر_الفأرة.y * 0.5 - كاميرا.position.y) * 0.05;
+            كاميرا.lookAt(مشهد.position);
+            
+            مُلحن_المؤثرات.render();
+        }
+
+        // --- بدء التنفيذ ---
+        تهيئة();
     </script>
 </body>
 </html>
