@@ -3,480 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرض أعمال سيف الإسلام</title>
+    <title>سيف الإسلام - مهندس برمجيات ومبدع مونتاج</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700;800&family=Tajawal:wght@400;500&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700&family=Tajawal:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent-color: #b91c1c; /* Blood Red */
-            --accent-glow: rgba(185, 28, 28, 0.5);
-            --whatsapp-color: #25D366;
-            --whatsapp-glow: rgba(37, 211, 102, 0.5);
-            --text-color: #d1d5db; /* Light Gray */
-            --bg-color: #000000;
-            --font-mono: 'Roboto Mono', monospace;
+            --glow-color: #00ff89;
+            --secondary-glow-color: #9400ff;
+            --glow-color-rgb: 0, 255, 137;
+            --bg-color: #010206;
+            --text-color: #e0e0e0;
+            --card-bg: rgba(10, 15, 25, 0.6);
+            --border-color: rgba(0, 255, 137, 0.25);
         }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
-        .font-display { font-family: 'Changa', sans-serif; font-weight: 800; text-transform: uppercase; }
-        
-        #video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; filter: grayscale(40%) brightness(60%); }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.6) 100%), url('https://www.transparenttextures.com/patterns/scanlines.png'); z-index: -1; }
-        .content-section { position: relative; z-index: 1; padding: 5rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .glitch-effect { position: relative; color: white; text-shadow: 0 0 1px var(--accent-color), 0 0 3px var(--accent-color); }
-        .glitch-effect:before, .glitch-effect:after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-        .glitch-effect:before { left: -1px; text-shadow: 1px 0 #00aaff; animation: glitch-anim-1 3s infinite linear alternate-reverse; }
-        .glitch-effect:after { left: 1px; text-shadow: -1px 0 var(--accent-color); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-        @keyframes glitch-anim-1 { 0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); } 2% { clip-path: polygon(0 78%, 100% 78%, 100% 82%, 0 82%); } 4% { clip-path: polygon(0 45%, 100% 45%, 100% 48%, 0 48%); } 6% { clip-path: polygon(0 92%, 100% 92%, 100% 98%, 0 98%); } 8% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); } 100% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); } }
-        @keyframes glitch-anim-2 { 0% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); } 3% { clip-path: polygon(0 8%, 100% 8%, 100% 12%, 0 12%); } 5% { clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%); } 7% { clip-path: polygon(0 22%, 100% 22%, 100% 28%, 0 28%); } 9% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); } 100% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); } }
-        .reveal-on-scroll { opacity: 0; filter: blur(5px); transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out, filter 1s ease-out; }
-        .reveal-on-scroll.is-visible { opacity: 1; filter: blur(0); transform: translateY(0); }
-        .section-divider { height: 2px; width: 100px; background-color: var(--accent-color); margin: 2rem auto; }
-        
-        /* --- Detective Evidence Board --- */
-        .evidence-board { 
-            background-color: #38302a; /* Dark brown base */
-            background-image: url('https://www.transparenttextures.com/patterns/dark-cork-board.png');
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.6);
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Tajawal', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            cursor: none;
         }
-        .evidence-photo-wrapper { opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: scale(0.8) translateY(50px) rotate(-15deg); }
-        .evidence-photo-wrapper.is-visible { opacity: 1; transform: scale(1) translateY(0) rotate(var(--rotate-deg, 0deg)); }
-        .evidence-photo { position: relative; background: white; padding: 10px; padding-bottom: 60px; box-shadow: 5px 5px 15px rgba(0,0,0,0.7); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .evidence-photo:hover { transform: scale(1.1) !important; z-index: 10; box-shadow: 10px 10px 25px rgba(0,0,0,0.5); }
-        .evidence-photo::after { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 30px; background: rgba(255, 255, 224, 0.4); border-left: 1px dashed rgba(0,0,0,0.2); border-right: 1px dashed rgba(0,0,0,0.2); box-shadow: 0 0 1px rgba(0,0,0,0.2); }
-        .evidence-caption { position: absolute; bottom: 10px; left: 10px; right: 10px; font-family: var(--font-mono); color: #333; }
-        .video-monitor { position: relative; background: #000; border: 1px solid rgba(185, 28, 28, 0.2); padding: 1rem; box-shadow: 0 0 40px var(--accent-glow); }
-        .monitor-corners { content: ''; position: absolute; width: 20px; height: 20px; border-color: var(--accent-color); border-style: solid; }
-        .video-monitor .c-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
-        .video-monitor .c-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
-        .video-monitor .c-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
-        .video-monitor .c-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
-        .video-container { position: relative; width: 100%; overflow: hidden; padding-top: 56.25%; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .terminal-container { background: rgba(0,0,0,0.7); border: 1px solid rgba(185, 28, 28, 0.3); padding: 1.5rem; position: relative; }
-        .terminal-header { font-family: var(--font-mono); color: var(--accent-color); border-bottom: 1px solid rgba(185, 28, 28, 0.3); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
-        .skill-loader { background-color: rgba(185, 28, 28, 0.1); padding: 0.25rem; border: 1px solid rgba(185, 28, 28, 0.2); }
-        .skill-loader-bar { background-color: var(--accent-color); height: 1.25rem; width: 0; transition: width 2s ease-out; box-shadow: 0 0 10px var(--accent-glow); }
-        .is-visible .skill-loader-bar { width: var(--skill-level); }
-        .form-input { width: 100%; background-color: rgba(10, 10, 10, 0.8); border: 1px solid rgba(185, 28, 28, 0.2); color: var(--text-color); padding: 0.75rem 1rem; font-family: 'Tajawal', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
-        .form-input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
-        .form-input::placeholder { color: #6b7280; }
-        .select-wrapper { position: relative; }
-        .select-wrapper::after { content: '▼'; font-size: 1rem; color: var(--accent-color); position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); pointer-events: none; }
-        select.form-input { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-        .cyber-button { position: relative; background: transparent; border: 2px solid; transition: color 0.4s; padding: 0.75rem 1.5rem; }
-        .cyber-button .line { position: absolute; transition: transform 0.4s ease; }
-        .cyber-button.accent-btn { border-color: var(--accent-color); color: var(--accent-color); }
-        .cyber-button.accent-btn:hover { color: white; }
-        .cyber-button.accent-btn .line { background: var(--accent-color); box-shadow: 0 0 10px var(--accent-glow); }
-        .cyber-button.whatsapp-btn { border-color: var(--whatsapp-color); color: var(--whatsapp-color); }
-        .cyber-button.whatsapp-btn:hover { color: white; }
-        .cyber-button.whatsapp-btn .line { background: var(--whatsapp-color); box-shadow: 0 0 10px var(--whatsapp-glow); }
-        .cyber-button .line-top { top: 0; left: 0; width: 100%; height: 2px; transform: scaleX(0); transform-origin: left; }
-        .cyber-button:hover .line-top { transform: scaleX(1); }
-        .cyber-button .line-right { top: 0; right: 0; width: 2px; height: 100%; transform: scaleY(0); transform-origin: top; }
-        .cyber-button:hover .line-right { transform: scaleY(1); }
-        .cyber-button .line-bottom { bottom: 0; right: 0; width: 100%; height: 2px; transform: scaleX(0); transform-origin: right; }
-        .cyber-button:hover .line-bottom { transform: scaleX(1); }
-        .cyber-button .line-left { bottom: 0; left: 0; width: 2px; height: 100%; transform: scaleY(0); transform-origin: bottom; }
-        .cyber-button:hover .line-left { transform: scaleY(1); }
-        .review-card { background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(185, 28, 28, 0.2); padding: 1.5rem; transition: all 0.3s ease; display: flex; flex-direction: column; }
-        .review-card:hover { transform: translateY(-5px); box-shadow: 0 0 15px var(--accent-glow); }
-        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
-        .star-rating input { display: none; }
-        .star-rating label { font-size: 2rem; color: #444; cursor: pointer; transition: color 0.2s; }
-        .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); }
-        .text-accent-color { color: var(--accent-color); }
+        #cursor-dot {
+            position: fixed; width: 8px; height: 8px; background-color: var(--glow-color);
+            border-radius: 50%; left: 0; top: 0; pointer-events: none;
+            transform: translate(-50%, -50%); z-index: 9999;
+            transition: transform 0.1s ease-out, opacity 0.3s;
+        }
+        #cursor-ring {
+            position: fixed; width: 40px; height: 40px; border: 2px solid var(--glow-color);
+            border-radius: 50%; left: 0; top: 0; pointer-events: none;
+            transform: translate(-50%, -50%); z-index: 9999;
+            transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s;
+        }
+        body:hover #cursor-ring, body:hover #cursor-dot { opacity: 1; }
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 10000; display: flex;
+            align-items: center; justify-content: center; flex-direction: column;
+            color: var(--glow-color); font-family: 'Roboto Mono', monospace;
+            transition: opacity 1s ease-out;
+        }
+        #loading-text { font-size: 1.2rem; margin-bottom: 1rem; }
+        #progress-bar { width: 200px; height: 2px; background: rgba(var(--glow-color-rgb), 0.2); }
+        #progress-fill { width: 0%; height: 100%; background: var(--glow-color); transition: width 0.3s; }
+        #three-canvas { position: fixed; top: 0; left: 0; outline: none; z-index: 1; }
+        #intro-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100;
+            background: radial-gradient(ellipse at center, rgba(2, 4, 10, 0) 0%, var(--bg-color) 80%);
+            display: flex; justify-content: center; align-items: center;
+            cursor: none; opacity: 0; transition: opacity 1s ease-out;
+        }
+        #intro-text {
+            color: var(--glow-color); font-family: 'Changa', sans-serif; font-size: 1.5rem;
+            text-shadow: 0 0 15px var(--glow-color); letter-spacing: 2px;
+            animation: fadeInPulse 3s infinite;
+        }
+        @keyframes fadeInPulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+        #main-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in 1s;
+            scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent;
+        }
+        #main-content::-webkit-scrollbar { width: 6px; }
+        #main-content::-webkit-scrollbar-track { background: transparent; }
+        #main-content::-webkit-scrollbar-thumb { background-color: var(--glow-color); border-radius: 6px; }
+        .content-section { padding: 6rem 1rem; max-width: 1100px; margin: 0 auto; position: relative; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out; }
+        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        .glass-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px; transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(var(--glow-color-rgb), 0.1);
+        }
+        .font-display { font-family: 'Changa', sans-serif; font-weight: 700; }
+        .text-glow { color: var(--glow-color); text-shadow: 0 0 4px rgba(var(--glow-color-rgb), 0.7), 0 0 12px rgba(var(--glow-color-rgb), 0.5); }
+        .skill-card { padding: 1.5rem; }
+        .skill-icon-wrapper {
+            width: 80px; height: 80px; background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            border-radius: 22px; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem; transition: all 0.3s ease;
+        }
+        .skill-icon { width: 48px; height: 48px; color: var(--glow-color); transition: all 0.3s ease; }
+        .video-placeholder {
+            background: #000; width: 100%; padding-top: 56.25%; position: relative;
+            border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color);
+        }
+        .video-placeholder::before {
+            content: '►'; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); font-size: 5rem; color: rgba(var(--glow-color-rgb), 0.5);
+            text-shadow: 0 0 15px var(--glow-color); transition: all 0.3s ease;
+        }
+        .glass-card:hover .video-placeholder::before { color: #fff; transform: translate(-50%, -50%) scale(1.2); }
     </style>
 </head>
 <body>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
 
-    <!-- Background Video -->
-    <video playsinline autoplay muted loop id="video-bg">
-        <source src="https://res.cloudinary.com/dz4xwjvif/video/upload/v1752055944/ocean-with-neon-glitch.3840x2160_cck4cq.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay"></div>
+    <div id="loading-screen">
+        <div id="loading-text">جاري فك تشفير البيانات...</div>
+        <div id="progress-bar"><div id="progress-fill"></div></div>
+    </div>
 
-    <!-- Hero Section -->
-    <header class="min-h-screen flex items-center justify-center text-center text-white px-4">
-        <div>
-            <h1 class="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl glitch-effect" data-text="SEIF EL ISLAM">SEIF EL ISLAM</h1>
-            <p class="mt-4 text-lg md:text-2xl font-light tracking-widest">محرر فيديو . مصمم جرافيك . مؤلف إعلانات</p>
-        </div>
-    </header>
-
-    <!-- About & Skills Section -->
-    <section class="content-section bg-black/80">
-        <div class="container mx-auto max-w-4xl">
-            <div class="terminal-container reveal-on-scroll">
-                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                <div class="terminal-header text-right text-lg md:text-xl lg:text-2xl decode-effect">> ملف المشتبه به: القضية رقم #7761</div>
-                <div class="text-base md:text-xl leading-relaxed text-right space-y-2 p-4">
-                    <p class="reveal-on-scroll" style="transition-delay: 200ms;">سيف الإسلام. متخصص إبداعي متعدد المهارات،</p>
-                    <p class="reveal-on-scroll" style="transition-delay: 400ms;">يجمع بين الرؤية الفنية والخبرة التقنية.</p>
-                    <p class="reveal-on-scroll" style="transition-delay: 600ms;">مهمته: تحويل الأفكار إلى تجارب بصرية مؤثرة تترك بصمة قوية.</p>
-                </div>
-
-                <div class="terminal-header mt-8 text-lg md:text-xl lg:text-2xl decode-effect">> ...جاري تنفيذ تحليل المهارات</div>
-                <div class="p-4">
-                    <div class="space-y-4">
-                        <div class="skill-item text-base md:text-lg"><p>Premiere Pro <span class="font-mono text-sm text-gray-400">[خبير]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 95%;"></div></div></div>
-                        <div class="skill-item text-base md:text-lg"><p>After Effects <span class="font-mono text-sm text-gray-400">[متقدم]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 79%;"></div></div></div>
-                        <div class="skill-item text-base md:text-lg"><p>AI Video Generation <span class="font-mono text-sm text-gray-400">[متقدم]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 89%;"></div></div></div>
-                        <div class="skill-item text-base md:text-lg"><p>Illustrator <span class="font-mono text-sm text-gray-400">[متمرس]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 75%;"></div></div></div>
-                        <div class="skill-item text-base md:text-lg"><p>Copywriting <span class="font-mono text-sm text-gray-400">[متمرس]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 69%;"></div></div></div>
-                        <div class="skill-item text-base md:text-lg"><p>HTML/CSS <span class="font-mono text-sm text-gray-400">[متقدم]</span></p><div class="skill-loader"><div class="skill-loader-bar" style="--skill-level: 90%;"></div></div></div>
-                    </div>
-                </div>
+    <canvas id="three-canvas"></canvas>
+    <div id="intro-container">
+        <div id="intro-text">بدء الاتصال</div>
+    </div>
+    <main id="main-content">
+        <header class="min-h-screen flex items-center justify-center text-center px-4 content-section">
+            <div class="reveal-on-scroll">
+                <h1 class="font-display text-6xl sm:text-7xl md:text-9xl text-glow">سيف الإسلام</h1>
+                <p class="mt-4 text-xl md:text-3xl font-light tracking-wider">مهندس برمجيات ومبدع مونتاج</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Showcase -->
-    <section class="content-section evidence-board">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="الأدلة المرفقة: معرض الأعمال">الأدلة المرفقة: معرض الأعمال</h2>
-            <div class="section-divider reveal-on-scroll" style="transition-delay: 100ms;"></div>
-            
-            <!-- ==== MAIN VIDEOS FIRST ==== -->
-            <div class="mt-12 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 1">عينة الفيديو 1</h3>
-                <div class="max-w-4xl mx-auto video-monitor">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/KeBKMOAs_a8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
+        </header>
+        <section id="about" class="content-section">
+            <div class="glass-card p-8 md:p-12 text-center reveal-on-scroll" style="--tilt-max: 8;">
+                <h2 class="font-display text-4xl md:text-5xl text-glow mb-6">الرؤية المزدوجة</h2>
+                <p class="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+                    أعيش في عالمين: عالم الشيفرة الدقيقة وعالم السرد البصري. كمهندس برمجيات، أبني حلولاً تقنية قوية. وكمبدع مونتاج، أصنع قصصاً مؤثرة. هذا المزيج الفريد يمكنني من تحويل أي فكرة إلى تجربة رقمية متكاملة وجذابة.
+                </p>
+            </div>
+        </section>
+        <section id="skills" class="content-section">
+            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">ترسانة المهارات</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 100ms; --tilt-max: 12;">
+                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M12 6v.01M12 12v.01M12 18v.01"></path></svg></div>
+                    <h3 class="font-display text-xl text-white text-center">تطوير الويب</h3>
+                </div>
+                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 200ms; --tilt-max: 12;">
+                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div>
+                    <h3 class="font-display text-xl text-white text-center">تطوير الجوال</h3>
+                </div>
+                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 300ms; --tilt-max: 12;">
+                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
+                    <h3 class="font-display text-xl text-white text-center">برامج سطح المكتب</h3>
+                </div>
+                <div class="glass-card skill-card flex flex-col items-center justify-center reveal-on-scroll" style="transition-delay: 400ms; --tilt-max: 12;">
+                    <div class="skill-icon-wrapper"><svg class="skill-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg></div>
+                    <h3 class="font-display text-xl text-white text-center">مونتاج إبداعي</h3>
                 </div>
             </div>
-
-            <div class="mt-16 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 2">عينة الفيديو 2</h3>
-                <div class="max-w-4xl mx-auto video-monitor">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/1wgL00xdLrU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
+        </section>
+        <section id="portfolio" class="content-section">
+            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">معرض أعمال المونتاج</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 100ms; --tilt-max: 6;"><div class="video-placeholder"></div></div>
+                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 200ms; --tilt-max: 6;"><div class="video-placeholder"></div></div>
+                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 300ms; --tilt-max: 6;"><div class="video-placeholder"></div></div>
+                <div class="glass-card p-2 reveal-on-scroll" style="transition-delay: 400ms; --tilt-max: 6;"><div class="video-placeholder"></div></div>
             </div>
+        </section>
+        <footer class="text-center py-8 mt-12 text-gray-500">
+            <p>&copy; 2025 سيف الإسلام. تم التصميم والبرمجة بحب وشغف.</p>
+        </footer>
+    </main>
 
-            <div class="mt-16 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 3">عينة الفيديو 3</h3>
-                <div class="max-w-4xl mx-auto video-monitor">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/Ego8GVwLw_o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", "gsap": "https://unpkg.com/gsap@3.12.5/index.js", "tone": "https://unpkg.com/tone@14.7.77/build/Tone.js" } }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+        import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader.js';
+        import { gsap } from 'gsap';
+        import * as Tone from 'tone';
 
-            <div class="mt-16 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="عينة الفيديو 4">عينة الفيديو 4</h3>
-                <div class="max-w-4xl mx-auto video-monitor">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/MIwTS0pxr28" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ==== GRAPHIC DESIGN IMAGES SECOND ==== -->
-            <div class="mt-20 reveal-on-scroll">
-                 <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="ملفات الصور">ملفات الصور</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12">
-                    <div class="evidence-photo-wrapper" style="--rotate-deg: -3deg; transition-delay: 200ms;"><div class="evidence-photo"><img src="https://res.cloudinary.com/dz4xwjvif/image/upload/v1752048960/%D8%B9%D8%B7%D9%88%D8%B1_%D8%A7%D9%84%D8%B4%D8%B1%D9%82_%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7_%D9%84%D9%88%D8%AC%D9%88_zie0b1.jpg" alt="تصميم عطور" class="w-full h-auto"><p class="evidence-caption">الدليل-01: إعلان عطور</p></div></div>
-                    <div class="evidence-photo-wrapper" style="--rotate-deg: 2deg; transition-delay: 300ms;"><div class="evidence-photo"><img src="https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049216/Logo_halwa_al_qodes_2_jd6nyb.jpg" alt="تصميم حلوى" class="w-full h-auto"><p class="evidence-caption">الدليل-02: شعار حلوى</p></div></div>
-                    <div class="evidence-photo-wrapper" style="--rotate-deg: -1deg; transition-delay: 400ms;"><div class="evidence-photo"><img src="https://res.cloudinary.com/dz4xwjvif/image/upload/v1752168394/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%A3%D9%88%D9%84_2_dkx2wl.jpg" alt="تصميم دليل الرياض" class="w-full h-auto"><p class="evidence-caption">الدليل-03: هوية الرياض</p></div></div>
-                    <div class="evidence-photo-wrapper" style="--rotate-deg: 4deg; transition-delay: 500ms;"><div class="evidence-photo"><img src="https://res.cloudinary.com/dz4xwjvif/image/upload/v1752167786/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84_ddjrb7.jpg" alt="تصميم دليل الرياض" class="w-full h-auto"><p class="evidence-caption">الدليل-04: هوية الرياض V2</p></div></div>
-                    <div class="evidence-photo-wrapper lg:col-start-2" style="--rotate-deg: -2deg; transition-delay: 600ms;"><div class="evidence-photo"><img src="https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049317/1752033860076_si3ycq.png" alt="تصميم دراجات" class="w-full h-auto"><p class="evidence-caption">الدليل-05: شعار دراجات</p></div></div>
-                </div>
-            </div>
-            
-            <!-- ==== UGC ADS THIRD ==== -->
-            <div class="mt-20 reveal-on-scroll">
-                <h3 class="font-display text-4xl text-white text-center mb-8 glitch-effect" data-text="إعلانات UGC إبداعية">إعلانات UGC إبداعية</h3>
-                
-                <!-- Video 1 -->
-                <div class="max-w-4xl mx-auto video-monitor mb-12">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                        <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ai_masri_good_hrvboy&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-
-                <!-- Video 2 -->
-                <div class="max-w-4xl mx-auto video-monitor">
-                    <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                    <div class="video-container">
-                         <iframe src="https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ayon_al_amira_w19lmf&profile=cld-default" title="Cloudinary Video Player" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Service Request Section -->
-    <section class="content-section bg-black/80 !pt-16">
-        <div class="container mx-auto max-w-6xl">
-            <div class="terminal-container reveal-on-scroll">
-                <div class="monitor-corners c-tl"></div><div class="monitor-corners c-tr"></div><div class="monitor-corners c-bl"></div><div class="monitor-corners c-br"></div>
-                <div class="terminal-header text-lg md:text-xl lg:text-2xl decode-effect">> إرسال مهمة جديدة...</div>
-                <form id="service-request-form" class="p-4 space-y-6">
-                    <div>
-                        <label for="name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
-                        <input type="text" id="name" name="name" class="form-input text-right" placeholder="أدخل اسمك الكامل..." required>
-                    </div>
-                    <div>
-                        <label for="service-type" class="font-mono text-lg text-gray-400 block mb-2 text-right">> نوع الخدمة:</label>
-                        <div class="select-wrapper">
-                            <select id="service-type" name="service-type" class="form-input text-right" required>
-                                <option value="" disabled selected>-- اختر نوع الخدمة --</option>
-                                <option value="تحرير فيديو">تحرير فيديو (مونتاج)</option>
-                                <option value="تصميم جرافيك">تصميم جرافيك (شعارات، هويات بصرية)</option>
-                                <option value="بناء ملف تعريفي تفاعلي">بناء ملف تعريفي تفاعلي (CV/Portfolio)</option>
-                                <option value="فيديو مولد بالذكاء الاصطناعي">فيديو مولد بالذكاء الاصطناعي</option>
-                                <option value="كتابة إعلانية">كتابة إعلانية (Copywriting)</option>
-                                <option value="تصميم واجهة ويب">تصميم واجهة ويب (HTML/CSS)</option>
-                                <option value="استشارة">استشارة / أخرى</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="description" class="font-mono text-lg text-gray-400 block mb-2 text-right">> وصف الطلب:</label>
-                        <textarea id="description" name="description" rows="5" class="form-input text-right" placeholder="صف تفاصيل المشروع أو الطلب هنا..." required></textarea>
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" class="cyber-button whatsapp-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
-                            <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                            <span>إرسال المهمة عبر واتساب</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Reviews Section -->
-    <section id="reviews" class="content-section bg-black/80 !pt-16">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-display text-5xl md:text-6xl text-white text-center reveal-on-scroll glitch-effect" data-text="ملفات الشهود">ملفات الشهود</h2>
-            <div class="section-divider reveal-on-scroll"></div>
-            
-            <!-- Button to show the form -->
-            <div id="review-cta" class="text-center mt-8 reveal-on-scroll">
-                <button id="show-review-form-btn" class="cyber-button accent-btn font-display text-xl">
-                    <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                    أضف شهادتك
-                </button>
-            </div>
-
-            <!-- Review Form Container (initially hidden) -->
-            <div id="review-form-container" class="terminal-container max-w-4xl mx-auto reveal-on-scroll hidden mt-8">
-                 <div class="terminal-header flex justify-between items-center">
-                    <span class="decode-effect">> تسجيل شهادة جديدة...</span>
-                </div>
-                <form id="review-form" class="p-4 space-y-6" method="post">
-                    <div>
-                        <label for="review-name" class="font-mono text-lg text-gray-400 block mb-2 text-right">> الاسم:</label>
-                        <input type="text" id="review-name" name="name" class="form-input text-right" placeholder="أدخل اسمك الكامل..." required>
-                    </div>
-                    <div>
-                        <label class="font-mono text-lg text-gray-400 block mb-2 text-right">> التقييم:</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5" required/><label for="star5" title="5 stars">★</label>
-                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
-                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
-                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
-                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="review-comment" class="font-mono text-lg text-gray-400 block mb-2 text-right">> نص الشهادة:</label>
-                        <textarea id="review-comment" name="comment" rows="5" class="form-input text-right" placeholder="اكتب شهادتك هنا..." required></textarea>
-                    </div>
-                    <div class="pt-4">
-                        <button type="submit" id="submit-review-btn" class="cyber-button accent-btn w-full flex items-center justify-center gap-3 text-center font-display text-lg md:text-xl py-3">
-                            <span class="line line-top"></span><span class="line line-right"></span><span class="line line-bottom"></span><span class="line line-left"></span>
-                            <span id="submit-review-text">إرسال الشهادة</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Display Reviews -->
-            <div id="reviews-list" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Reviews will be dynamically inserted here -->
-            </div>
-        </div>
-    </section>
-
-    <footer class="text-center py-6 bg-black text-gray-500">
-        <p>CASE FILE CLOSED. © 2025 Seif El Islam. All Rights Reserved.</p>
-    </footer>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- CONFIGURATION ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
-
-        // --- DOM Elements ---
-        const reviewForm = document.getElementById('review-form');
-        const reviewsList = document.getElementById('reviews-list');
-        const submitBtn = document.getElementById('submit-review-btn');
-        const submitBtnText = document.getElementById('submit-review-text');
-        const showReviewFormBtn = document.getElementById('show-review-form-btn');
-        const reviewCta = document.getElementById('review-cta');
-        const reviewFormContainer = document.getElementById('review-form-container');
+        // --- GLOBAL STATE ---
+        let scene, camera, renderer, composer, introCrystal, backgroundNebula, mouse;
+        const loadingManager = new THREE.LoadingManager();
         
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, { threshold: 0.1 });
+        // --- DOM ELEMENTS ---
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressFill = document.getElementById('progress-fill');
+        const introContainer = document.getElementById('intro-container');
+        const mainContent = document.getElementById('main-content');
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
 
-        // Initialize animations after load
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.reveal-on-scroll, .evidence-photo-wrapper, .skill-item').forEach((el) => {
-                scrollObserver.observe(el);
-            });
-        });
-
-        // --- Show Review Form ---
-        showReviewFormBtn.addEventListener('click', () => {
-            reviewCta.classList.add('hidden');
-            reviewFormContainer.classList.remove('hidden');
-        });
-
-        // --- Fetch and Display Reviews (Robust) ---
-        function fetchReviews() {
-            reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> ...جاري تحميل الشهادات</p>';
-            fetch(SCRIPT_URL + '?action=get&cache_bust=' + new Date().getTime())
-                .then(response => {
-                    if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
-                        const sortedData = data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        
-                        let reviewsHtml = '';
-                        sortedData.forEach(review => {
-                            if (review && review.name && review.comment && review.rating && review.createdAt) {
-                                const date = new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                                let starsHtml = '';
-                                for(let i = 0; i < 5; i++) {
-                                    starsHtml += `<span class="${i < review.rating ? 'text-accent-color' : 'text-gray-600'}">★</span>`;
-                                }
-                                reviewsHtml += `
-                                    <div class="review-card reveal-on-scroll">
-                                        <div class="flex items-center mb-4">
-                                            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-accent-color text-xl ml-4">
-                                                ${review.name.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-white text-lg">${review.name}</h4>
-                                                <p class="text-xs text-gray-400 font-mono">${date}</p>
-                                            </div>
-                                        </div>
-                                        <blockquote class="border-r-4 border-accent-color pr-4 mt-2 mb-4 flex-grow">
-                                            <p class="text-gray-300 text-right leading-relaxed italic">"${review.comment}"</p>
-                                        </blockquote>
-                                        <div class="flex justify-end mt-auto">${starsHtml}</div>
-                                    </div>
-                                `;
-                            }
-                        });
-                        reviewsList.innerHTML = reviewsHtml;
-                        document.querySelectorAll('#reviews-list .reveal-on-scroll').forEach((el) => scrollObserver.observe(el));
-                    } else if (data && data.success && Array.isArray(data.data) && data.data.length === 0) {
-                        reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-gray-400">> لا توجد شهادات حالياً... كن أول من يضيف شهادة.</p>';
-                    } else {
-                        throw new Error('البيانات المستلمة غير صالحة أو فارغة.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching or processing reviews:', error);
-                    reviewsList.innerHTML = '<p class="text-center col-span-full font-mono text-red-500">> حدث خطأ أثناء تحميل الشهادات.</p>';
-                });
+        // --- INITIALIZATION ---
+        function init() {
+            setupLoadingManager();
+            setupScene();
+            setupPostProcessing();
+            createIntroCrystal();
+            createBackgroundNebula();
+            setupEventListeners();
+            animate();
+            console.log("Made with ❤️ by Seif El Islam & Gemini. Check out this Easter Egg!");
         }
 
-        // --- Handle Review Form Submission ---
-        reviewForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtnText.textContent = '...جاري الإرسال';
+        // --- SETUP FUNCTIONS ---
+        function setupLoadingManager() {
+            loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+                const progress = itemsLoaded / itemsTotal;
+                progressFill.style.width = `${progress * 100}%`;
+            };
+            loadingManager.onLoad = () => {
+                gsap.to(loadingScreen, { opacity: 0, duration: 1, onComplete: () => loadingScreen.style.display = 'none' });
+                gsap.to(introContainer, { opacity: 1, duration: 1, delay: 0.5 });
+            };
+        }
 
-            const formData = new FormData(reviewForm);
-            fetch(SCRIPT_URL, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    reviewForm.reset();
-                    document.querySelectorAll('.star-rating input').forEach(input => input.checked = false);
-                    submitBtnText.textContent = 'تم الإرسال بنجاح!';
-                    setTimeout(() => {
-                        fetchReviews(); 
-                        submitBtnText.textContent = 'إرسال الشهادة';
-                        submitBtn.disabled = false;
-                        reviewFormContainer.classList.add('hidden');
-                        reviewCta.classList.remove('hidden');
-                    }, 1500);
-                } else {
-                    throw new Error(data.message || 'فشل إرسال الطلب من الخادم.');
-                }
-            })
-            .catch(error => {
-                console.error('Error submitting review:', error);
-                alert('فشل إرسال التقييم. يرجى التحقق من اتصالك والمحاولة مرة أخرى.');
-                submitBtnText.textContent = 'إرسال الشهادة';
-                submitBtn.disabled = false;
+        function setupScene() {
+            mouse = new THREE.Vector2();
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 15;
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
+
+        function setupPostProcessing() {
+            const renderScene = new RenderPass(scene, camera);
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.5, 0.1);
+            const rgbShiftPass = new ShaderPass(RGBShiftShader);
+            rgbShiftPass.uniforms['amount'].value = 0.001;
+            composer = new EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+            composer.addPass(rgbShiftPass);
+        }
+
+        function createIntroCrystal() {
+            const crystalGeometry = new THREE.IcosahedronGeometry(3, 1);
+            const crystalMaterial = new THREE.MeshPhysicalMaterial({
+                roughness: 0.1, transmission: 1, thickness: 1.5,
+                color: 0x00ff89, wireframe: true
             });
-        });
+            introCrystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
+            scene.add(introCrystal);
+        }
 
-        // --- Service Request Form (WhatsApp) ---
-        const serviceForm = document.getElementById('service-request-form');
-        if (serviceForm) {
-            serviceForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const serviceType = document.getElementById('service-type').value;
-                const description = document.getElementById('description').value;
-                const myPhoneNumber = '213776170547';
-                let message = `سلام عليكم،\n\n*الاسم:* ${name}\n*نوع الخدمة المطلوبة:* ${serviceType}\n\n*تفاصيل الطلب:*\n${description}`;
-                const encodedMessage = encodeURIComponent(message);
-                const whatsappURL = `https://wa.me/${myPhoneNumber}?text=${encodedMessage}`;
-                window.open(whatsappURL, '_blank');
+        function createBackgroundNebula() {
+            backgroundNebula = new THREE.Group();
+            const nebulaMaterial = new THREE.PointsMaterial({
+                color: 0x00ff89, size: 0.03, blending: THREE.AdditiveBlending,
+                transparent: true, opacity: 0.5, sizeAttenuation: true
+            });
+            const nebulaGeometry = new THREE.BufferGeometry();
+            const positions = [];
+            for (let i = 0; i < 8000; i++) {
+                positions.push((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50);
+            }
+            nebulaGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            backgroundNebula.add(new THREE.Points(nebulaGeometry, nebulaMaterial));
+            backgroundNebula.position.z = -20;
+        }
+
+        // --- EVENT LISTENERS ---
+        function setupEventListeners() {
+            introContainer.addEventListener('click', startExperience, { once: true });
+            window.addEventListener('resize', onWindowResize);
+            mainContent.addEventListener('scroll', onScroll);
+            window.addEventListener('mousemove', onMouseMove);
+            
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => scrollObserver.observe(el));
+            
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('mousemove', onCardMouseMove);
+                card.addEventListener('mouseleave', onCardMouseLeave);
             });
         }
-        
-        // --- Decode Text Effect on Scroll ---
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$*";
-        document.querySelectorAll('.decode-effect').forEach(el => {
-            let interval = null;
-            const originalText = el.innerText;
-            const decodeObserver = new IntersectionObserver(entries => {
-                if(entries[0].isIntersecting){
-                    let iteration = 0;
-                    clearInterval(interval);
-                    interval = setInterval(() => {
-                        el.innerText = originalText.split("").map((letter, index) => {
-                            if(index < iteration) return originalText[index];
-                            return letters[Math.floor(Math.random() * letters.length)]
-                        }).join("");
-                        if(iteration >= originalText.length) clearInterval(interval);
-                        iteration += 1 / 2;
-                    }, 40);
-                    decodeObserver.unobserve(el);
-                }
-            }, { threshold: 0.5 });
-            decodeObserver.observe(el);
-        });
 
-        // --- Initial Load of reviews---
-        fetchReviews();
-    });
+        // --- EVENT HANDLERS ---
+        async function startExperience() {
+            await Tone.start();
+            const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            synth.triggerAttackRelease(["C4", "E4", "G4"], "8n");
+            
+            gsap.to(introContainer, { opacity: 0, duration: 1, onComplete: () => introContainer.style.display = 'none' });
+
+            const tl = gsap.timeline({ onComplete: () => { scene.remove(introCrystal); scene.add(backgroundNebula); } });
+            tl.to(camera.position, { z: 5, duration: 2.5, ease: 'power3.inOut' });
+            tl.to(introCrystal.rotation, { y: Math.PI * 2, duration: 2.5, ease: 'power3.inOut' }, "<");
+            tl.to(introCrystal.scale, { x: 0.1, y: 0.1, z: 0.1, duration: 2.5, ease: 'power3.inOut' }, "<");
+            tl.to(introCrystal.material, { opacity: 0, duration: 2.5, ease: 'power3.inOut' }, "<");
+
+            gsap.to(mainContent, { 
+                opacity: 1, duration: 1, delay: 1,
+                onStart: () => { mainContent.style.pointerEvents = 'auto'; }
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function onScroll() {
+            const scrollPercent = mainContent.scrollTop / (mainContent.scrollHeight - mainContent.clientHeight);
+            if (backgroundNebula) {
+                backgroundNebula.rotation.y = scrollPercent * Math.PI * 0.3;
+                backgroundNebula.position.y = -scrollPercent * 15;
+            }
+        }
+
+        function onMouseMove(event) {
+            gsap.to(cursorDot, { duration: 0.1, x: event.clientX, y: event.clientY });
+            gsap.to(cursorRing, { duration: 0.3, x: event.clientX, y: event.clientY });
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onCardMouseMove(e) {
+            const card = e.currentTarget;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const maxTilt = card.style.getPropertyValue('--tilt-max') || 10;
+            const rotateX = (y / rect.height - 0.5) * -maxTilt;
+            const rotateY = (x / rect.width - 0.5) * maxTilt;
+            gsap.to(card, { rotationX: rotateX, rotationY: rotateY, transformPerspective: 1000, ease: 'power1.out', duration: 0.5 });
+        }
+
+        function onCardMouseLeave(e) {
+            gsap.to(e.currentTarget, { rotationX: 0, rotationY: 0, ease: 'power1.out', duration: 0.5 });
+        }
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+            if (introCrystal && introCrystal.parent) {
+                introCrystal.rotation.x = elapsedTime * 0.2;
+                introCrystal.rotation.y = elapsedTime * 0.2;
+            }
+            if (backgroundNebula && backgroundNebula.parent) {
+                backgroundNebula.rotation.x += (mouse.y * 0.1 - backgroundNebula.rotation.x) * 0.05;
+                backgroundNebula.rotation.y += (mouse.x * 0.1 - backgroundNebula.rotation.y) * 0.05;
+            }
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+
+        init();
     </script>
 </body>
 </html>
