@@ -3,417 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيف الإسلام - مهندس برمجيات ومبدع مونتاج</title>
+    <title>سيف الإسلام - التجربة التفاعلية النهائية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700&family=Tajawal:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;800&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glow-color: #00ff89;
-            --secondary-glow-color: #9400ff;
-            --glow-color-rgb: 0, 255, 137;
-            --bg-color: #010206;
-            --text-color: #e0e0e0;
-            --card-bg: rgba(10, 15, 25, 0.65);
-            --border-color: rgba(0, 255, 137, 0.25);
-            --input-bg: rgba(0, 0, 0, 0.3);
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --primary-color: #58a6ff;
+            --secondary-color: #f778ba;
+            --card-bg: rgba(22, 27, 34, 0.85);
+            --border-color: rgba(139, 148, 158, 0.3);
         }
-        /* --- الأساسيات والمؤشر --- */
         body {
-            background-color: var(--bg-color); color: var(--text-color);
-            font-family: 'Tajawal', sans-serif; overflow: hidden; margin: 0; cursor: none;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Kufi Arabic', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            cursor: none;
         }
-        #cursor-dot, #cursor-ring { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 9999; transition: opacity 0.3s; }
-        #cursor-dot { width: 8px; height: 8px; background-color: var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, opacity 0.3s; }
-        #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--glow-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.2s ease-out, width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s; }
-        /* --- شاشة التحميل --- */
-        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease-out 0.5s; }
-        .spinner {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 9px solid;
-            border-color: var(--glow-color) #0000;
-            animation: spinner-anim 0.8s infinite linear;
-        }
-        @keyframes spinner-anim { to { transform: rotate(1turn); } }
-        /* --- الهيكل الرئيسي --- */
+        /* --- 3D Canvas & Loading --- */
         #three-canvas { position: fixed; top: 0; left: 0; outline: none; z-index: 1; }
-        #main-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 1s ease-in; scrollbar-width: thin; scrollbar-color: var(--glow-color) transparent; }
-        #main-content::-webkit-scrollbar { width: 6px; }
-        #main-content::-webkit-scrollbar-track { background: transparent; }
-        #main-content::-webkit-scrollbar-thumb { background-color: var(--glow-color); border-radius: 6px; }
-        .content-section { padding: 8rem 1rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
-        .header-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
-        /* --- البطاقات الزجاجية --- */
-        .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 24px; transition: all 0.4s ease; box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(var(--glow-color-rgb), 0.1); transform-style: preserve-3d; }
-        .glass-card:hover { transform: translateY(-8px) scale(1.02); border-color: rgba(var(--glow-color-rgb), 0.7); box-shadow: 0 0 35px rgba(var(--glow-color-rgb), 0.2), inset 0 0 25px rgba(var(--glow-color-rgb), 0.2); }
-        /* --- الخطوط وعناصر الواجهة --- */
-        .font-display { font-family: 'Changa', sans-serif; font-weight: 700; }
-        .text-glow { color: var(--glow-color); text-shadow: 0 0 4px rgba(var(--glow-color-rgb), 0.7), 0 0 12px rgba(var(--glow-color-rgb), 0.5), 0 0 24px rgba(var(--glow-color-rgb), 0.3); }
-        .form-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 12px; padding: 0.75rem 1rem; transition: all 0.3s ease; }
-        .form-input:focus { outline: none; border-color: var(--glow-color); box-shadow: 0 0 15px rgba(var(--glow-color-rgb), 0.5); }
-        .cyber-button { position: relative; background: transparent; border: 2px solid var(--glow-color); color: var(--glow-color); border-radius: 12px; padding: 0.75rem 1.5rem; transition: all 0.4s; overflow: hidden; font-family: 'Changa', sans-serif; text-shadow: 0 0 5px var(--glow-color); }
-        .cyber-button:hover { color: #010206; background: var(--glow-color); box-shadow: 0 0 25px var(--glow-color); }
-        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
-        .star-rating input { display: none; }
-        .star-rating label { font-size: 2rem; color: #444; cursor: none; transition: color 0.2s; }
-        .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--glow-color); text-shadow: 0 0 10px var(--glow-color); }
-        /* --- حركة الظهور عند التمرير --- */
-        .reveal-on-scroll { opacity: 0; transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out; }
-        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s ease-out; }
+        .loader { width: 60px; height: 60px; border-radius: 50%; border: 5px solid var(--border-color); border-top-color: var(--primary-color); animation: spin 1s linear infinite; }
+        #loading-text { margin-top: 20px; font-size: 1.2rem; color: var(--primary-color); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Custom Cursor --- */
+        #cursor-dot, #cursor-ring { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 9999; transition: opacity 0.3s, transform 0.2s; }
+        #cursor-dot { width: 8px; height: 8px; background-color: var(--primary-color); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary-color); }
+        #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--primary-color); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.3s, width 0.3s, height 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        body.cursor-active #cursor-ring { transform: translate(-50%, -50%) scale(1.5); border-color: var(--secondary-color); box-shadow: 0 0 20px var(--secondary-color); }
+
+        /* --- UI Windows --- */
+        .ui-window {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            width: 90vw; max-width: 800px;
+            max-height: 80vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+        }
+        .ui-window-header {
+            padding: 0.75rem 1rem;
+            background: rgba(13, 17, 23, 0.5);
+            border-bottom: 1px solid var(--border-color);
+            cursor: grab;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px 16px 0 0;
+        }
+        .ui-window-header:active { cursor: grabbing; }
+        .ui-window-title { font-weight: 800; color: var(--primary-color); }
+        .ui-window-close { width: 24px; height: 24px; background: var(--secondary-color); border: none; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+        .ui-window-close:hover { transform: scale(1.1); }
+        .ui-window-content { padding: 1.5rem; overflow-y: auto; }
+        
+        /* Intro Hint */
+        #intro-hint {
+            position: fixed;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 1s ease 2s;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p id="loading-text">جارٍ بناء التجربة...</p>
+    </div>
+
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
-    <div id="loading-screen">
-        <div class="spinner"></div>
-    </div>
-
     <canvas id="three-canvas"></canvas>
 
-    <main id="main-content">
-        <header class="header-section content-section">
-            <div id="header-text-container" class="text-center">
-                 <h1 class="font-display text-6xl md:text-8xl lg:text-9xl text-glow" id="main-title" style="opacity: 0;">سيف الإسلام</h1>
-                 <p class="mt-4 text-xl md:text-3xl font-light tracking-wider" id="subtitle" style="opacity: 0;">مهندس برمجيات ومبدع مونتاج</p>
-            </div>
-        </header>
+    <div id="intro-hint">
+        <p class="font-bold text-lg">مرحباً بك في عالمي</p>
+        <p>استخدم الفأرة للتجول، وانقر على العناصر للتفاعل</p>
+    </div>
 
-        <section id="about" class="content-section">
-            <div class="glass-card p-8 md:p-12 text-center reveal-on-scroll" data-tilt>
-                <h2 class="font-display text-4xl md:text-5xl text-glow mb-6">الرؤية المزدوجة</h2>
-                <p class="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">أعيش في عالمين: عالم الشيفرة الدقيقة وعالم السرد البصري. كمهندس برمجيات، أبني حلولاً تقنية قوية. وكمبدع مونتاج، أصنع قصصاً مؤثرة. هذا المزيج الفريد يمكنني من تحويل أي فكرة إلى تجربة رقمية متكاملة وجذابة.</p>
-            </div>
-        </section>
-
-        <section id="skills" class="content-section">
-            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">ترسانة المهارات</h2>
-            <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                </div>
-        </section>
-
-        <section id="portfolio" class="content-section">
-            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">معرض الأعمال</h2>
-            <div id="portfolio-grid" class="space-y-16">
-                </div>
-        </section>
-
-        <section id="reviews" class="content-section">
-            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">آراء العملاء</h2>
-            <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"></div>
-            <div class="glass-card p-8 reveal-on-scroll" data-tilt>
-                <h3 class="font-display text-3xl text-glow mb-6 text-center">أضف شهادتك</h3>
-                <form id="review-form" class="space-y-6">
-                     </form>
-            </div>
-        </section>
-        
-        <section id="contact" class="content-section">
-            <h2 class="font-display text-4xl md:text-5xl text-glow mb-12 text-center reveal-on-scroll">تواصل معي</h2>
-            <div class="glass-card p-8 reveal-on-scroll" data-tilt>
-                <form id="service-request-form" class="space-y-6">
-                     </form>
-            </div>
-        </section>
-
-        <footer class="text-center py-8 mt-12 text-gray-500">
-            <p>&copy; 2025 سيف الإسلام. تم التصميم والبرمجة بحب وشغف.</p>
-        </footer>
-    </main>
+    <div id="about-window" class="ui-window">
+        <div class="ui-window-header"><span class="ui-window-title">من أنا</span><button class="ui-window-close" data-window="about-window"></button></div>
+        <div class="ui-window-content">
+            <h2 class="font-display text-4xl text-primary mb-4">رؤية مزدوجة. تنفيذ متكامل.</h2>
+            <p class="text-lg leading-relaxed">أنا سيف الإسلام، مهندس برمجيات ومبدع مونتاج. أعيش على الخط الفاصل بين الدقة التقنية والسرد البصري. هذا المزيج الفريد يمنحني القدرة على فهم المشاريع من منظورين: كيف تعمل، وكيف تبدو وتُشعِر المستخدم.<br/><br/> سواء كنت تبني تطبيقًا معقدًا، أو تطلق حملة إعلانية، أو تحتاج إلى حل يجمع بين الاثنين، فأنا هنا لتحويل فكرتك إلى واقع ملموس ومؤثر.</p>
+        </div>
+    </div>
+    <div id="skills-window" class="ui-window">
+        <div class="ui-window-header"><span class="ui-window-title">ترسانة المهارات</span><button class="ui-window-close" data-window="skills-window"></button></div>
+        <div class="ui-window-content grid grid-cols-1 md:grid-cols-2 gap-6" id="skills-grid"></div>
+    </div>
+    <div id="portfolio-window" class="ui-window">
+        <div class="ui-window-header"><span class="ui-window-title">معرض الأعمال</span><button class="ui-window-close" data-window="portfolio-window"></button></div>
+        <div class="ui-window-content space-y-8" id="portfolio-grid"></div>
+    </div>
+    <div id="contact-window" class="ui-window">
+        <div class="ui-window-header"><span class="ui-window-title">تواصل معي</span><button class="ui-window-close" data-window="contact-window"></button></div>
+        <div class="ui-window-content">
+            <h2 class="font-display text-4xl text-primary mb-6 text-center">لنصنع شيئًا مذهلاً</h2>
+            <form id="service-request-form" class="space-y-6"></form>
+        </div>
+    </div>
 
     <script type="importmap">
-        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", "gsap": "https://unpkg.com/gsap@3.12.5/index.js" } }
+        { "imports": { 
+            "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", 
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/", 
+            "gsap": "https://unpkg.com/gsap@3.12.5/index.js", 
+            "troika-three-text": "https://cdn.jsdelivr.net/npm/troika-three-text@0.49.0/dist/troika-three-text.esm.js",
+            "troika-worker-utils": "https://cdn.jsdelivr.net/npm/troika-worker-utils@0.49.0/dist/troika-worker-utils.esm.js",
+            "webgl-sdf-generator": "https://cdn.jsdelivr.net/npm/webgl-sdf-generator@0.49.0/dist/webgl-sdf-generator.esm.js",
+            "bidi-js": "https://cdn.jsdelivr.net/npm/bidi-js@2.1.0/dist/bidi.esm.js"
+        } }
     </script>
     <script type="module">
-        // --- استيراد الوحدات ---
         import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+        import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+        import { Text } from 'troika-three-text';
         import { gsap } from 'gsap';
 
-        // --- الإعدادات العامة والمتغيرات ---
-        let مشهد, كاميرا, عارض, مُلحن_المؤثرات, مؤشر_الفأرة;
-        const مجموعة_الخلفية = new THREE.Group();
-        const كائنات_ثلاثية_الأبعاد = new THREE.Group();
-        const رابط_جوجل_سكريبت = 'https://script.google.com/macros/s/AKfycbwwuLKpOhx1YmWl1bezEc7aJF2kgPwIwazWhqzYuEj4XO6Aa0TZDAHBeAWClhKCByXo2w/exec';
+        let scene, camera, renderer, controls, composer, particleMesh;
+        let raycaster, mouse, INTERSECTED;
+        const mixers = [];
+        const clock = new THREE.Clock();
+        const interactiveObjects = new THREE.Group();
+        let isWindowOpen = false;
+
+        const config = {
+            bloom: { strength: 0.7, radius: 0.8, threshold: 0.1 },
+            camera: { fov: 60, near: 0.1, far: 2000, initialPos: new THREE.Vector3(0, 4, 22) },
+        };
+
+        const skillsData = [
+            { name: 'تطوير الويب', icon: `<path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>`, desc: "بناء تطبيقات ويب حديثة وتفاعلية باستخدام أحدث التقنيات." },
+            { name: 'تطوير الجوال', icon: `<path d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>`, desc: "تصميم وبرمجة تطبيقات جوال أصلية لمنصات iOS و Android." },
+            { name: 'برامج سطح المكتب', icon: `<path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>`, desc: "تطوير برمجيات قوية وفعالة لأنظمة التشغيل المختلفة." },
+            { name: 'مونتاج إبداعي', icon: `<path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>`, desc: "إنتاج فيديوهات احترافية، من الإعلانات إلى المحتوى الإبداعي." }
+        ];
+        const portfolioData = [
+            { title: 'إعلان لعلامة تجارية', url: 'https://www.youtube.com/embed/KeBKMOAs_a8' },
+            { title: 'فيديو ترويجي لمنتج', url: 'https://www.youtube.com/embed/1wgL00xdLrU' },
+            { title: 'فيديو UGC إبداعي', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ai_masri_good_hrvboy' },
+            { title: 'إعلان عيادة تجميل', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ayon_al_amira_w19lmf' }
+        ];
+
+        function init() {
+            setupScene();
+            setupPostProcessing();
+            setupControls();
+            create3DWorld();
+            renderDOMContent();
+            setupEventListeners();
+            animate();
+        }
+
+        function setupScene() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x0d1117, 20, 60);
+            camera = new THREE.PerspectiveCamera(config.camera.fov, window.innerWidth / window.innerHeight, config.camera.near, config.camera.far);
+            camera.position.copy(config.camera.initialPos);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.setClearColor(0x000000, 0);
+            const ambient = new THREE.HemisphereLight(0x58a6ff, 0x0d1117, 1.5);
+            const directional = new THREE.DirectionalLight(0xffffff, 1.0);
+            directional.position.set(10, 20, 10);
+            scene.add(ambient, directional);
+            scene.add(interactiveObjects);
+        }
+
+        function setupPostProcessing() {
+            const renderPass = new RenderPass(scene, camera);
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), config.bloom.strength, config.bloom.radius, config.bloom.threshold);
+            const fxaaPass = new ShaderPass(FXAAShader);
+            const pixelRatio = renderer.getPixelRatio();
+            fxaaPass.material.uniforms['resolution'].value.x = 1 / (window.innerWidth * pixelRatio);
+            fxaaPass.material.uniforms['resolution'].value.y = 1 / (window.innerHeight * pixelRatio);
+            composer = new EffectComposer(renderer);
+            composer.addPass(renderPass);
+            composer.addPass(bloomPass);
+            composer.addPass(fxaaPass);
+        }
+
+        function setupControls() {
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 10;
+            controls.maxDistance = 35;
+            controls.maxPolarAngle = Math.PI / 2 - 0.1;
+            controls.target.set(0, 2, 0);
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+        }
+
+        function create3DWorld() {
+            const loadingManager = new THREE.LoadingManager(() => {
+                gsap.to('#loading-screen', { opacity: 0, duration: 1, onComplete: () => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    gsap.to('#intro-hint', { opacity: 1 });
+                }});
+            });
+            const loader = new GLTFLoader(loadingManager);
+
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0x080a0e, roughness: 0.9 }));
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const posArray = new Float32Array(5000 * 3);
+            for(let i = 0; i < 5000 * 3; i++) posArray[i] = (Math.random() - 0.5) * 100;
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particleMesh = new THREE.Points(particlesGeometry, new THREE.PointsMaterial({ size: 0.05, color: 0x58a6ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+            scene.add(particleMesh);
+
+            const objectData = [
+                { name: "about", label: "من أنا // ABOUT", windowId: "about-window", position: [-10, 0, 0], modelUrl: 'https://threejs.org/examples/models/gltf/Michelle.glb', scale: 0.02, targetPos: [-6, 2, 5] },
+                { name: "skills", label: "المهارات // SKILLS", windowId: "skills-window", position: [10, 2, 0], targetPos: [6, 2, 5] },
+                { name: "portfolio", label: "الأعمال // PORTFOLIO", windowId: "portfolio-window", position: [0, 2, -10], targetPos: [0, 2, -5] },
+                { name: "contact", label: "التواصل // CONTACT", windowId: "contact-window", position: [0, 2, 10], targetPos: [0, 2, 5] }
+            ];
+
+            objectData.forEach(data => {
+                if (data.modelUrl) {
+                    loader.load(data.modelUrl, (gltf) => {
+                        const object = gltf.scene;
+                        object.scale.set(data.scale, data.scale, data.scale);
+                        object.traverse(child => { if(child.isMesh) { child.material.roughness = 0.8; child.material.metalness = 0.1; }});
+                        const mixer = new THREE.AnimationMixer(object);
+                        if (gltf.animations.length) {
+                            mixer.clipAction(gltf.animations[0]).play();
+                        }
+                        mixers.push(mixer);
+                        setupInteractiveObject(object, data);
+                    });
+                } else {
+                    let object;
+                    if (data.name === 'skills') {
+                        const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+                        const material = new THREE.MeshStandardMaterial({ color: 0x58a6ff, roughness: 0.3, metalness: 0.5 });
+                        object = new THREE.Mesh(geometry, material);
+                    } else if (data.name === 'portfolio') {
+                         const geometry = new THREE.BoxGeometry(2.5, 2.5, 2.5, 2, 2, 2);
+                         const material = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: true });
+                         object = new THREE.Mesh(geometry, material);
+                    } else if (data.name === 'contact') {
+                        const geometry = new THREE.OctahedronGeometry(1.5, 0);
+                        const material = new THREE.MeshStandardMaterial({ color: 0xf778ba, roughness: 0.4 });
+                        object = new THREE.Mesh(geometry, material);
+                    }
+                    setupInteractiveObject(object, data);
+                }
+            });
+        }
+
+        function setupInteractiveObject(object, data) {
+            object.position.set(...data.position);
+            object.name = data.name;
+            object.userData = { targetPosition: new THREE.Vector3(...data.targetPos), windowId: data.windowId, interactive: true };
+            
+            const textLabel = new Text();
+            textLabel.text = data.label;
+            textLabel.font = 'https://fonts.gstatic.com/s/robotomono/v22/L0x5DF4xlVMF-BfR8bXMIjhGq3-cXbKDO1w.woff';
+            textLabel.fontSize = 0.4;
+            textLabel.color = 0x58a6ff;
+            textLabel.anchorX = 'center';
+            textLabel.position.y = 2.5;
+            textLabel.material.transparent = true;
+            textLabel.material.opacity = 0;
+            object.userData.label = textLabel;
+            object.add(textLabel);
+            
+            interactiveObjects.add(object);
+        }
+
+        function renderDOMContent() {
+            const skillsContainer = document.getElementById('skills-grid');
+            skillsContainer.innerHTML = ''; // Clear previous content
+            skillsData.forEach(skill => {
+                skillsContainer.innerHTML += `<div class="p-4 text-center bg-gray-500/10 rounded-xl border border-border-color"><svg class="w-12 h-12 mx-auto mb-2 text-primary" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">${skill.icon}</svg><h3 class="font-bold text-lg">${skill.name}</h3><p class="text-sm text-gray-400">${skill.desc}</p></div>`;
+            });
+            const portfolioContainer = document.getElementById('portfolio-grid');
+            portfolioContainer.innerHTML = ''; // Clear previous content
+            portfolioData.forEach(item => {
+                portfolioContainer.innerHTML += `<div class="mb-6"><h3 class="font-bold text-xl mb-2">${item.title}</h3><div class="aspect-video rounded-lg overflow-hidden border-2 border-border-color"><iframe src="${item.url}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div></div>`;
+            });
+            document.getElementById('service-request-form').innerHTML = `<input type="text" placeholder="الاسم" required class="form-input w-full bg-transparent border-border-color text-white"><input type="email" placeholder="البريد الإلكتروني" required class="form-input w-full bg-transparent border-border-color text-white"><textarea placeholder="رسالتك..." required class="form-input w-full bg-transparent border-border-color text-white" rows="3"></textarea><button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg transition-transform transform hover:scale-105">إرسال</button>`;
+        }
+
+        function openWindow(windowId, targetObject) {
+            isWindowOpen = true;
+            const windowEl = document.getElementById(windowId);
+            gsap.to(windowEl, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.7)', onStart: () => windowEl.style.pointerEvents = 'auto' });
+            gsap.to(controls.target, { ...targetObject.position, duration: 1.5, ease: 'power3.inOut' });
+            gsap.to(camera.position, { ...targetObject.userData.targetPosition, duration: 1.5, ease: 'power3.inOut' });
+        }
+
+        function closeWindow(windowId) {
+            isWindowOpen = false;
+            const windowEl = document.getElementById(windowId);
+            gsap.to(windowEl, { opacity: 0, scale: 0.5, duration: 0.5, ease: 'back.in(1.7)', onComplete: () => windowEl.style.pointerEvents = 'none' });
+            gsap.to(controls.target, { x: 0, y: 2, z: 0, duration: 1.5, ease: 'power3.inOut' });
+            gsap.to(camera.position, { ...config.camera.initialPos, duration: 1.5, ease: 'power3.inOut' });
+        }
+
+        function setupEventListeners() {
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('click', onMouseClick);
+            document.querySelectorAll('.ui-window-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeWindow(btn.dataset.window);
+                });
+            });
+            let activeWindow = null, offset = { x: 0, y: 0 };
+            document.querySelectorAll('.ui-window-header').forEach(header => {
+                header.addEventListener('mousedown', (e) => {
+                    activeWindow = header.closest('.ui-window');
+                    offset = { x: e.clientX - activeWindow.getBoundingClientRect().left, y: e.clientY - activeWindow.getBoundingClientRect().top };
+                    activeWindow.style.transform = 'translate(-50%, -50%)'; // remove scaling
+                });
+            });
+            document.addEventListener('mousemove', (e) => { 
+                if (activeWindow) { 
+                    activeWindow.style.left = `${e.clientX - offset.x + activeWindow.offsetWidth / 2}px`; 
+                    activeWindow.style.top = `${e.clientY - offset.y + activeWindow.offsetHeight / 2}px`; 
+                } 
+            });
+            document.addEventListener('mouseup', () => activeWindow = null);
+        }
         
-        // --- عناصر الواجهة الرسومية (DOM) ---
-        const شاشة_التحميل = document.getElementById('loading-screen');
-        const المحتوى_الرئيسي = document.getElementById('main-content');
-        const نقطة_المؤشر = document.getElementById('cursor-dot');
-        const حلقة_المؤشر = document.getElementById('cursor-ring');
-        const العنوان_الرئيسي = document.getElementById('main-title');
-        const العنوان_الفرعي = document.getElementById('subtitle');
-
-        // --- البيانات ---
-        const بيانات_المهارات = [
-            { name: 'تطوير الويب', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M12 6v.01M12 12v.01M12 18v.01"></path>` },
-            { name: 'تطوير الجوال', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>` },
-            { name: 'برامج سطح المكتب', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>` },
-            { name: 'مونتاج إبداعي', icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>` }
-        ];
-
-        const بيانات_معرض_الأعمال = [
-            { type: 'video', title: 'عينة الفيديو 1', url: 'https://www.youtube.com/embed/KeBKMOAs_a8' },
-            { type: 'video', title: 'عينة الفيديو 2', url: 'https://www.youtube.com/embed/1wgL00xdLrU' },
-            { type: 'video', title: 'عينة الفيديو 3', url: 'https://www.youtube.com/embed/Ego8GVwLw_o' },
-            { type: 'video', title: 'عينة الفيديو 4', url: 'https://www.youtube.com/embed/MIwTS0pxr28' },
-            { type: 'image', title: 'ملفات الصور', images: [
-                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752048960/%D8%B9%D8%B7%D9%88%D8%B1_%D8%A7%D9%84%D8%B4%D8%B1%D9%82_%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7_%D9%84%D9%88%D8%AC%D9%88_zie0b1.jpg', alt: 'تصميم عطور' },
-                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049216/Logo_halwa_al_qodes_2_jd6nyb.jpg', alt: 'تصميم حلوى' },
-                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752168394/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%A3%D9%88%D9%84_2_dkx2wl.jpg', alt: 'تصميم دليل الرياض' },
-                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752167786/%D8%AF%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%B4%D8%A7%D9%85%D9%84_ddjrb7.jpg', alt: 'تصميم دليل الرياض' },
-                { url: 'https://res.cloudinary.com/dz4xwjvif/image/upload/v1752049317/1752033860076_si3ycq.png', alt: 'تصميم دراجات' }
-            ]},
-            { type: 'video', title: 'إعلانات UGC إبداعية', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ai_masri_good_hrvboy' },
-            { type: 'video', title: 'إعلان عيادة تجميل', url: 'https://player.cloudinary.com/embed/?cloud_name=dz4xwjvif&public_id=ayon_al_amira_w19lmf' }
-        ];
-
-        // --- الدوال الرئيسية ---
-        function تهيئة() {
-            إعداد_المشهد();
-            إعداد_المؤثرات_البصرية();
-            إعداد_خلفية_المجرات();
-            إعداد_الكائنات_ثلاثية_الأبعاد();
-            
-            عرض_المهارات();
-            عرض_معرض_الأعمال();
-            عرض_نموذج_المراجعة();
-            عرض_نموذج_التواصل();
-            جلب_وعرض_المراجعات();
-
-            إضافة_معالجات_الأحداث();
-            بدء_التجربة();
-            تحريك();
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
         }
-
-        // --- دوال الإعداد ---
-        function إعداد_المشهد() {
-            مشهد = new THREE.Scene();
-            مؤشر_الفأرة = new THREE.Vector2();
-            
-            const نسبة_العرض_إلى_الارتفاع = window.innerWidth / window.innerHeight;
-            كاميرا = new THREE.PerspectiveCamera(75, نسبة_العرض_إلى_الارتفاع, 0.1, 1000);
-            كاميرا.position.z = 5;
-            
-            عارض = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
-            عارض.setSize(window.innerWidth, window.innerHeight);
-            عارض.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            عارض.setClearColor(0x010206, 1);
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            gsap.to('#cursor-dot', { x: event.clientX, y: event.clientY, duration: 0.1 });
+            gsap.to('#cursor-ring', { x: event.clientX, y: event.clientY, duration: 0.3 });
         }
-
-        function إعداد_المؤثرات_البصرية() {
-            const ممر_العرض = new RenderPass(مشهد, كاميرا);
-            const ممر_التوهج = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
-            
-            مُلحن_المؤثرات = new EffectComposer(عارض);
-            مُلحن_المؤثرات.addPass(ممر_العرض);
-            مُلحن_المؤثرات.addPass(ممر_التوهج);
-        }
-
-        function إعداد_خلفية_المجرات() {
-            const عدد_الجسيمات = 5000;
-            const مواقع = new Float32Array(عدد_الجسيمات * 3);
-            for (let i = 0; i < عدد_الجسيمات; i++) {
-                مواقع[i * 3 + 0] = (Math.random() - 0.5) * 20;
-                مواقع[i * 3 + 1] = (Math.random() - 0.5) * 20;
-                مواقع[i * 3 + 2] = (Math.random() - 0.5) * 20;
+        function onMouseClick() {
+            if (INTERSECTED && INTERSECTED.userData.interactive && !isWindowOpen) {
+                openWindow(INTERSECTED.userData.windowId, INTERSECTED);
             }
-            const هندسة_الجسيمات = new THREE.BufferGeometry();
-            هندسة_الجسيمات.setAttribute('position', new THREE.BufferAttribute(مواقع, 3));
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            const elapsedTime = clock.getElapsedTime();
             
-            const مادة_الجسيمات = new THREE.PointsMaterial({ color: 0x00ff89, size: 0.02, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
-            const جسيمات = new THREE.Points(هندسة_الجسيمات, مادة_الجسيمات);
-            مجموعة_الخلفية.add(جسيمات);
-            مشهد.add(مجموعة_الخلفية);
-        }
-        
-        function إعداد_الكائنات_ثلاثية_الأبعاد() {
-            const هندسة_المكعب = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
-            const هندسة_الإطار = new THREE.WireframeGeometry(هندسة_المكعب);
-            const مادة_الإطار = new THREE.LineBasicMaterial({ color: 0x00ff89, linewidth: 2, transparent: true, opacity: 0.5 });
-            const مكعب_مهارات = new THREE.LineSegments(هندسة_الإطار, مادة_الإطار);
-            مكعب_مهارات.position.set(-3, 8, -2);
-            مكعب_مهارات.name = 'مكعب_المهارات';
-            كائنات_ثلاثية_الأبعاد.add(مكعب_مهارات);
-
-            const شكل_التشغيل = new THREE.Shape();
-            شكل_التشغيل.moveTo(0, 0.6); شكل_التشغيل.lineTo(0, -0.6); شكل_التشغيل.lineTo(1, 0); شكل_التشغيل.lineTo(0, 0.6);
-            const هندسة_التشغيل = new THREE.ShapeGeometry(شكل_التشغيل);
-            const مادة_التشغيل = new THREE.MeshBasicMaterial({ color: 0x9400ff, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
-            const أيقونة_تشغيل = new THREE.Mesh(هندسة_التشغيل, مادة_التشغيل);
-            أيقونة_تشغيل.position.set(3, 22, -3);
-            أيقونة_تشغيل.rotation.y = -Math.PI / 4;
-            أيقونة_تشغيل.name = 'أيقونة_التشغيل';
-            كائنات_ثلاثية_الأبعاد.add(أيقونة_تشغيل);
+            if (!isWindowOpen) { controls.update(); }
             
-            مشهد.add(كائنات_ثلاثية_الأبعاد);
-        }
-
-        // --- دوال عرض المحتوى الديناميكي ---
-        function عرض_المهارات() {
-            const حاوية = document.getElementById('skills-grid');
-            بيانات_المهارات.forEach((مهارة, فهرس) => {
-                const بطاقة = `<div class="glass-card p-6 text-center flex flex-col items-center justify-center reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;"><svg class="w-16 h-16 mb-4" style="color: var(--glow-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${مهارة.icon}</svg><h3 class="font-display text-xl">${مهارة.name}</h3></div>`;
-                حاوية.innerHTML += بطاقة;
-            });
-        }
-        
-        function عرض_معرض_الأعمال() {
-            const حاوية = document.getElementById('portfolio-grid');
-            بيانات_معرض_الأعمال.forEach((عمل, فهرس) => {
-                let محتوى_البطاقة = '';
-                if (عمل.type === 'video') {
-                    محتوى_البطاقة = `<h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3><div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden border-2 border-transparent hover:border-green-400 transition-all duration-300"><iframe src="${عمل.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg"></iframe></div>`;
-                } else if (عمل.type === 'image') {
-                    const صور_html = عمل.images.map(صورة => `<img src="${صورة.url}" alt="${صورة.alt}" class="w-full h-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300">`).join('');
-                    محتوى_البطاقة = `<h3 class="font-display text-3xl text-glow mb-6">${عمل.title}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-4">${صور_html}</div>`;
-                }
-                const عنصر = `<div class="glass-card p-8 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 150}ms;">${محتوى_البطاقة}</div>`;
-                حاوية.innerHTML += عنصر;
-            });
-        }
-        
-        function عرض_نموذج_المراجعة() {
-             document.getElementById('review-form').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" name="name" placeholder="الاسم" required class="form-input"><input type="text" name="project" placeholder="نوع المشروع" required class="form-input"></div><textarea name="review" placeholder="شهادتك..." required class="form-input w-full" rows="4"></textarea><div class="flex flex-col items-center"><p class="mb-2">تقييمك:</p><div class="star-rating"><input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label><input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label><input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label><input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label><input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label></div></div><button type="submit" class="cyber-button w-full mt-4">إرسال الشهادة</button>`;
-        }
-
-        function عرض_نموذج_التواصل() {
-            document.getElementById('service-request-form').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" id="contact-name" name="name" placeholder="الاسم الكامل" required class="form-input"><input type="email" id="contact-email" name="email" placeholder="البريد الإلكتروني" required class="form-input"></div><select id="contact-service" name="service" class="form-input w-full"><option>اختر نوع الخدمة</option><option value="تطوير ويب">تطوير ويب</option><option value="تطوير جوال">تطوير جوال</option><option value="مونتاج فيديو">مونتاج فيديو</option><option value="تصميم جرافيك">تصميم جرافيك</option><option value="استشارة">استشارة</option></select><textarea id="contact-details" name="details" placeholder="تفاصيل المشروع..." required class="form-input w-full" rows="5"></textarea><button type="submit" class="cyber-button w-full">إرسال الطلب عبر واتساب</button>`;
-        }
-
-        // --- الحركات والتفاعلات ---
-        function بدء_التجربة() {
-            شاشة_التحميل.style.opacity = '0';
-            شاشة_التحميل.addEventListener('transitionend', () => شاشة_التحميل.style.display = 'none');
+            mixers.forEach(mixer => mixer.update(delta));
             
-            المحتوى_الرئيسي.style.opacity = '1';
-            المحتوى_الرئيسي.style.pointerEvents = 'auto';
+            particleMesh.rotation.y = elapsedTime * 0.05;
 
-            gsap.timeline()
-                .fromTo(العنوان_الرئيسي, { opacity: 0, y: 50, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: 'power3.out' })
-                .fromTo(العنوان_الفرعي, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, "-=1");
-        }
-
-        function تطبيق_تأثير_الميلان(عنصر) {
-            let إطار_الحركة;
-            عنصر.addEventListener('mousemove', (حدث) => {
-                if (إطار_الحركة) cancelAnimationFrame(إطار_الحركة);
-                إطار_الحركة = requestAnimationFrame(() => {
-                    const حدود = عنصر.getBoundingClientRect();
-                    const س = حدث.clientX - حدود.left; const ص = حدث.clientY - حدود.top;
-                    const نسبة_س = (س / حدود.width - 0.5) * 2; const نسبة_ص = (ص / حدود.height - 0.5) * 2;
-                    gsap.to(عنصر, { duration: 0.5, rotationY: 8 * نسبة_س, rotationX: -8 * نسبة_ص, ease: 'power1.out' });
-                });
-            });
-            عنصر.addEventListener('mouseleave', () => {
-                gsap.to(عنصر, { duration: 0.8, rotationY: 0, rotationX: 0, ease: 'elastic.out(1, 0.3)' });
-            });
-        }
-        
-        // --- معالجة البيانات ---
-        async function جلب_وعرض_المراجعات() {
-            try {
-                const استجابة = await fetch(`${رابط_جوجل_سكريبت}?action=read`);
-                const بيانات = await استجابة.json();
-                const حاوية = document.getElementById('reviews-list');
-                حاوية.innerHTML = '';
-                بيانات.forEach((مراجعة, فهرس) => {
-                    if (!مراجعة.name || !مراجعة.review) return;
-                    let نجوم = '★'.repeat(مراجعة.rating || 5) + '☆'.repeat(5 - (مراجعة.rating || 5));
-                    const بطاقة = `<div class="glass-card p-6 reveal-on-scroll" data-tilt style="transition-delay: ${فهرس * 100}ms;"><p class="text-xl font-bold mb-2">${مراجعة.name}</p><p class="text-sm text-gray-400 mb-3">${مراجعة.project}</p><p class="mb-4">"${مراجعة.review}"</p><div class="text-yellow-400 text-xl">${نجوم}</div></div>`;
-                    حاوية.innerHTML += بطاقة;
-                });
-                تفعيل_كل_تأثيرات_الميلان();
-            } catch (خطأ) { console.error('فشل في جلب المراجعات:', خطأ); }
-        }
-        
-        // --- معالجات الأحداث ---
-        function إضافة_معالجات_الأحداث() {
-            window.addEventListener('resize', عند_تغيير_حجم_النافذة);
-            window.addEventListener('mousemove', عند_تحريك_الفأرة);
-            المحتوى_الرئيسي.addEventListener('scroll', معالجة_التمرير);
-
-            document.getElementById('review-form').addEventListener('submit', إرسال_المراجعة);
-            document.getElementById('service-request-form').addEventListener('submit', إنشاء_رابط_واتساب);
-            تفعيل_كل_تأثيرات_الميلان();
-        }
-
-        function تفعيل_كل_تأثيرات_الميلان() {
-            document.querySelectorAll('[data-tilt]').forEach(تطبيق_تأثير_الميلان);
-        }
-
-        function عند_تغيير_حجم_النافذة() {
-            كاميرا.aspect = window.innerWidth / window.innerHeight;
-            كاميرا.updateProjectionMatrix();
-            عارض.setSize(window.innerWidth, window.innerHeight);
-            مُلحن_المؤثرات.setSize(window.innerWidth, window.innerHeight);
-            عارض.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        }
-
-        function عند_تحريك_الفأرة(حدث) {
-            مؤشر_الفأرة.x = (حدث.clientX / window.innerWidth) * 2 - 1;
-            مؤشر_الفأرة.y = -(حدث.clientY / window.innerHeight) * 2 + 1;
-            gsap.to(نقطة_المؤشر, { duration: 0.1, x: حدث.clientX, y: حدث.clientY });
-            gsap.to(حلقة_المؤشر, { duration: 0.3, x: حدث.clientX, y: حدث.clientY });
-        }
-
-        function معالجة_التمرير() {
-            document.querySelectorAll('.reveal-on-scroll').forEach(عنصر => {
-                if (عنصر.getBoundingClientRect().top < window.innerHeight - 100) {
-                    عنصر.classList.add('is-visible');
+            interactiveObjects.children.forEach(child => {
+                child.rotation.y += 0.002;
+                child.position.y += Math.sin(elapsedTime * 1.5 + child.position.x) * 0.003;
+                if(child.userData.label) {
+                    child.userData.label.quaternion.copy(camera.quaternion);
+                    child.userData.label.sync();
                 }
             });
-            const نسبة_التمرير = المحتوى_الرئيسي.scrollTop / (المحتوى_الرئيسي.scrollHeight - window.innerHeight);
-            كائنات_ثلاثية_الأبعاد.position.y = -نسبة_التمرير * 30;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects.children, true);
+            const interactiveIntersect = intersects.find(i => {
+                let obj = i.object;
+                while(obj.parent && !obj.userData.interactive) {
+                    obj = obj.parent;
+                }
+                return obj.userData.interactive;
+            });
+
+            if (interactiveIntersect) {
+                let targetObject = interactiveIntersect.object;
+                 while(targetObject.parent && !targetObject.userData.interactive) {
+                    targetObject = targetObject.parent;
+                }
+
+                if (INTERSECTED != targetObject) {
+                    if (INTERSECTED) {
+                        gsap.to(INTERSECTED.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+                        gsap.to(INTERSECTED.userData.label.material, { opacity: 0, duration: 0.3 });
+                    }
+                    INTERSECTED = targetObject;
+                    gsap.to(INTERSECTED.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.3 });
+                    gsap.to(INTERSECTED.userData.label.material, { opacity: 1, duration: 0.3 });
+                    document.body.classList.add('cursor-active');
+                }
+            } else {
+                if (INTERSECTED) {
+                    gsap.to(INTERSECTED.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+                    gsap.to(INTERSECTED.userData.label.material, { opacity: 0, duration: 0.3 });
+                }
+                INTERSECTED = null;
+                document.body.classList.remove('cursor-active');
+            }
+
+            composer.render();
         }
 
-        async function إرسال_المراجعة(حدث) {
-            حدث.preventDefault();
-            const نموذج = حدث.target, زر = نموذج.querySelector('button'), نص_الزر_الأصلي = زر.textContent;
-            زر.textContent = 'جارٍ الإرسال...'; زر.disabled = true;
-            try {
-                await fetch(`${رابط_جوجل_سكريبت}?action=create`, { method: 'POST', body: new URLSearchParams(new FormData(نموذج)) });
-                نموذج.reset(); زر.textContent = 'تم الإرسال بنجاح!';
-                await جلب_وعرض_المراجعات();
-            } catch (خطأ) { زر.textContent = 'حدث خطأ!'; } 
-            finally { setTimeout(() => { زر.textContent = نص_الزر_الأصلي; زر.disabled = false; }, 3000); }
-        }
-
-        function إنشاء_رابط_واتساب(حدث) {
-            حدث.preventDefault();
-            const رسالة = `مرحباً سيف،\nأنا ${document.getElementById('contact-name').value}.\n\nأرغب في طلب خدمة: *${document.getElementById('contact-service').value}*.\n\nالتفاصيل:\n${document.getElementById('contact-details').value}`;
-            window.open(`https://wa.me/966503901416?text=${encodeURIComponent(رسالة)}`, '_blank');
-        }
-
-        // --- دورة التحديث الرئيسية ---
-        const ساعة = new THREE.Clock();
-        function تحريك() {
-            requestAnimationFrame(تحريك);
-            const الزمن_المنقضي = ساعة.getElapsedTime();
-            مجموعة_الخلفية.rotation.y = الزمن_المنقضي * 0.05;
-            مجموعة_الخلفية.rotation.x = الزمن_المنقضي * 0.02;
-
-            const مكعب_المهارات = كائنات_ثلاثية_الأبعاد.getObjectByName('مكعب_المهارات');
-            if(مكعب_المهارات) { مكعب_المهارات.rotation.x = الزمن_المنقضي * 0.3; مكعب_المهارات.rotation.y = الزمن_المنقضي * 0.3; }
-            
-            const أيقونة_التشغيل = كائنات_ثلاثية_الأبعاد.getObjectByName('أيقونة_التشغيل');
-            if(أيقونة_التشغيل) { أيقونة_التشغيل.rotation.y = -Math.PI / 4 + Math.sin(الزمن_المنقضي * 0.5) * 0.5; }
-
-            كاميرا.position.x += (مؤشر_الفأرة.x * 0.5 - كاميرا.position.x) * 0.05;
-            كاميرا.position.y += (-مؤشر_الفأرة.y * 0.5 - كاميرا.position.y) * 0.05;
-            كاميرا.lookAt(مشهد.position);
-            
-            مُلحن_المؤثرات.render();
-        }
-
-        // --- بدء التنفيذ ---
-        document.addEventListener('DOMContentLoaded', تهيئة);
+        init();
     </script>
 </body>
 </html>
